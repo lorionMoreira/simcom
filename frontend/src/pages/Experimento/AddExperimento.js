@@ -318,7 +318,7 @@ const UserProfileExperimentoAdd = props => {
   const fetchUsers2 = async (page) => {
     try {
       setLoading2(true);
-      const response = await get('/api/componentes/buscar', {
+      const response = await get('/api/componentes/buscar/index', {
         params: {
           page: page,
           size: perPage2,

@@ -47,15 +47,33 @@ public class ComponenteResource {
         return ResponseEntity.ok().body(entities);
     }
 	*/
-    @GetMapping("/buscar")
-    public ResponseEntity<Page<Componente>> getEntitiesWithPagination(
+    @GetMapping("/buscar/index")
+    public ResponseEntity<Page<Componente>> getEntitiesWithPaginationIndex(
+            @RequestParam(value = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "size", defaultValue = "2") int pageSize) {
+        Page<Componente> entities = service.findWithPaginationNull(pageNumber, pageSize);
+        return ResponseEntity.ok().body(entities);
+    }
+
+    @GetMapping("/buscar/solicitado")
+    public ResponseEntity<Page<Componente>> getEntitiesWithPaginationSolicitado(
             @RequestParam(value = "page", defaultValue = "0") int pageNumber,
             @RequestParam(value = "size", defaultValue = "2") int pageSize) {
         Page<Componente> entities = service.findWithPagination(pageNumber, pageSize);
         return ResponseEntity.ok().body(entities);
     }
 
-    @PostMapping("/buscar")
+    @PostMapping("/buscar/index")
+    public ResponseEntity<Page<Componente>> getEntitiesWithConditionsNull(
+            @RequestParam(value = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize,
+            @RequestBody String searchRequest) {
+
+        Page<Componente> entities = service.findWithConditionsAndPaginationPostNull(searchRequest, pageNumber, pageSize);
+        return ResponseEntity.ok().body(entities);
+    }
+
+    @PostMapping("/buscar/solicitado")
     public ResponseEntity<Page<Componente>> getEntitiesWithConditions(
             @RequestParam(value = "page", defaultValue = "0") int pageNumber,
             @RequestParam(value = "size", defaultValue = "10") int pageSize,

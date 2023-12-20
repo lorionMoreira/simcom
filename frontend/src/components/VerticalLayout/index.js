@@ -144,7 +144,7 @@ const Layout = props => {
           type={leftSideBarType}
           isMobile={isMobile}
         />
-        <div className="main-content">{props.children}</div>
+        <div className="main-content" style={{overflow: 'visible'}}>{props.children}</div>
         <Footer />
       </div>
       {showRightSidebar ? <RightSidebar /> : null}

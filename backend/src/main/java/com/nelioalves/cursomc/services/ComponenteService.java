@@ -1,28 +1,28 @@
 package com.nelioalves.cursomc.services;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.nelioalves.cursomc.domain.Componente;
-import com.nelioalves.cursomc.domain.TipoComponente;
+
 import com.nelioalves.cursomc.dto.ComponenteDTO;
 import com.nelioalves.cursomc.dto.ComponenteDTO2;
-import com.nelioalves.cursomc.dto.TipoComponenteDTO;
+
 import com.nelioalves.cursomc.repositories.ComponenteRepository;
 import com.nelioalves.cursomc.resources.utils.HandleInputs;
 import com.nelioalves.cursomc.resources.utils.UUIDUtils;
 import com.nelioalves.cursomc.services.exceptions.AuthorizationException;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Service
 public class ComponenteService {
@@ -104,6 +104,14 @@ public class ComponenteService {
         return result;
     }
 	*/
+	public Page<Componente> findWithPaginationNull(int pageNumber, int pageSize) {
+		// Create a PageRequest object with pagination parameters
+		PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+		Page<Componente> result = repo.findWithNullLocal(pageRequest);
+
+		return result;
+	}
     public Page<Componente> findWithPagination(int pageNumber, int pageSize) {
         // Create a PageRequest object with pagination parameters
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
@@ -112,6 +120,18 @@ public class ComponenteService {
 
         return result;
     }
+
+	public Page<Componente> findWithConditionsAndPaginationPostNull(String conditionDirty, int pageNumber, int pageSize) {
+		// Create a PageRequest object with pagination parameters
+		PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+		String searchTerm = HandleInputs.getInputParam(conditionDirty);
+
+		Page<Componente> result = repo.findWithConditionsAndPaginationPostNull(searchTerm, pageRequest);
+
+		return result;
+
+	}
     
     public Page<Componente> findWithConditionsAndPaginationPost(String conditionDirty, int pageNumber, int pageSize) {
         // Create a PageRequest object with pagination parameters
@@ -124,6 +144,10 @@ public class ComponenteService {
         return result;
 
     }
+
+
+
+
     /*
     public Page<Componente> findWithConditionsAndPaginationEmprestado(int pageNumber, int pageSize) {
         // Create a PageRequest object with pagination parameters
@@ -169,13 +193,13 @@ public class ComponenteService {
     public List<Componente> computeInsert(List<ComponenteDTO2> objDtoList) {
         // Generate a UUID
     	List<Componente> objSavedList = new ArrayList<>();
-    	
+
     	for (ComponenteDTO2 objDto : objDtoList) {
     		
     		Componente obj = find(objDto.getId());
     		
     		if(obj.getTipoComponente().getTipo() == 1 ) {
-    			if(obj.getQuantidade() > objDto.getQuantidade()) {
+    			if(obj.getQuantidade() >= objDto.getQuantidade()) {
     				
     				Integer qtdPedida = objDto.getQuantidade();
     				Integer qtdDisponivel = obj.getQuantidade();
@@ -188,8 +212,9 @@ public class ComponenteService {
     				if(existente == 0) {
     					repo.deleteById(obj.getId()); 
     				}
-    			}else {
-    				throw new AuthorizationException("Insufficient quantity available.");
+    			}else{
+					throw new DataIntegrityException("Insufficient quantity available.");
+
     			}
     		}else if(obj.getTipoComponente().getTipo() == 2 ) {
     			if(obj.getQuantidade() > objDto.getQuantidade()) {

@@ -79,7 +79,7 @@ const [paginationKey, setPaginationKey] = useState(Date.now());
 const fetchUsers = async (page) => {
   try {
     setLoading(true);
-    const response = await get('/api/componentes/buscar', {
+    const response = await get('/api/componentes/buscar/solicitado', {
       params: {
         page: page,
         size: perPage,
@@ -104,7 +104,7 @@ const handleInputSearch = async (buscaString) => {
   try {
     setLoading(true);
     setCurrentPage(0)
-    const response = await post('/api/componentes/buscar',
+    const response = await post('/api/componentes/buscar/solicitado',
     {
       searchRequest: buscaString
     },

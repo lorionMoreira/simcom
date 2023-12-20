@@ -40,11 +40,15 @@ console.log(demoData)
       },
       {
         Header: 'Valor',
-        accessor: 'tipoComponente.valor',
+        Cell: ({ row }) => (
+          <div className="d-flex justify-content-center">
+            {row.original?.tipoComponente.valor} {row.original?.tipoComponente.unidadeId.nome}
+          </div>
+        ),
       },
       {
-        Header: 'Unidade',
-        accessor: 'tipoComponente.unidadeId.nome',
+        Header: 'Disponibilidade',
+        accessor: 'quantidade',
       },
       {
         Header: 'Especificacao',
@@ -72,7 +76,7 @@ const [paginationKey, setPaginationKey] = useState(Date.now());
 const fetchUsers = async (page) => {
   try {
     setLoading(true);
-    const response = await get('/api/componentes/buscar', {
+    const response = await get('/api/componentes/buscar/index', {
       params: {
         page: page,
         size: perPage,
@@ -92,9 +96,15 @@ const fetchUsers = async (page) => {
     console.log("_inicial")
     setLoading(false);
     console.log(error)
+
     if (error?.message == "Request failed with status code 403") {
       dispatch(logoutUser(history));
     }
+
+    if (error?.message == "Network Error") {
+      dispatch(logoutUser(history));
+    }
+
   }
 };
 
@@ -102,7 +112,7 @@ const handleInputSearch = async (buscaString) => {
   try {
     setLoading(true);
     setCurrentPage(0)
-    const response = await post('/api/componentes/buscar',
+    const response = await post('/api/componentes/buscar/index',
     {
       searchRequest: buscaString
     },

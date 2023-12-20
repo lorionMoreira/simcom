@@ -146,7 +146,7 @@ const EcommerceCheckout = (props) => {
   const fetchUsers = async (page) => {
     try {
       setLoading(true);
-      const response = await get('/api/componentes/buscar', {
+      const response = await get('/api/componentes/buscar/solicitado', {
         params: {
           page: page,
           size: perPage,
@@ -613,7 +613,7 @@ const EcommerceCheckout = (props) => {
                                     }}
                                 >
                                   <div className="mb-2">
-                                    <Label>Novo Tipo de Componente</Label>
+                                    <Label>Lista de componentes agrupados por experimento</Label>
                                   </div>
 
                                   <div className="mb-3">

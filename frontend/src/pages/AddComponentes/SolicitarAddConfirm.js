@@ -132,6 +132,21 @@ const SolicitarAddConfirm = () => {
     }
   }
 
+  const handleNumberChange = (id, event) => {
+    const inputValue = parseInt(event.target.value, 10);
+    
+    // Check if the input is a valid number starting from 1
+    if (!isNaN(inputValue) && inputValue >= 1) {
+      
+      setproductList(
+        productList.map(p =>
+          p.id === id ? { ...p, quantidade: inputValue > p.qtdDisponivel ? p.qtdDisponivel : inputValue} : p
+        )
+      );
+
+    }
+  };
+
   const handleEnviarClick = async () => {
     try {
       console.log(productList)
@@ -183,6 +198,7 @@ const SolicitarAddConfirm = () => {
                           <th>Id</th>
                           <th>Nome</th>
                           <th>Especificação</th>
+                          <th>Disponibilidade</th>
                           <th>Quantidade</th>
                           
                         </tr>
@@ -210,6 +226,7 @@ const SolicitarAddConfirm = () => {
                               </p>
                             </td>
                             <td> {product.especificacao}</td>
+                            <td> {product.qtdDisponivel} Und(s)</td>
                             <td>
 
                               <div style={{ width: "120px" }}>
@@ -227,7 +244,10 @@ const SolicitarAddConfirm = () => {
                                     type="text"
                                     value={product.quantidade}
                                     name="demo_vertical"
-                                    readOnly
+                                    onChange={() => {
+                                      handleNumberChange(product.id,event)
+                                    } }
+                                    
                                   />
                                   <div className="input-group-append">
                                     <button type="button" className="btn btn-primary"
@@ -287,7 +307,7 @@ const SolicitarAddConfirm = () => {
                     SELECIONAR USUÁRIO
                   </CardTitle>
                   <CardText>
-                      Selecione o professor na lista abaixo.
+                      Selecione o professor a receber o empréstimo na lista abaixo.
                   </CardText>
                   <Select
                     value={selectedGroup}
