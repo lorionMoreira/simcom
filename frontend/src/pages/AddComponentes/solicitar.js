@@ -27,7 +27,7 @@ import {
 } from "reactstrap"
 //import Select from "react-select"
 import { Link } from "react-router-dom"
-
+import Select2 from "react-select";
 import classnames from "classnames"
 
 //Imports
@@ -71,6 +71,35 @@ const EcommerceCheckout = (props) => {
   const [alert, setAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState('');
   const [colorAlert, setcolorAlert] = useState('success');
+
+  const [selectedGroup, setselectedGroup] = useState(null);
+  const [optionGroup, setoptionGroup] = useState([]);
+  const [isLoading, setisLoading] = useState(true);
+
+  function handleSelectGroup(selectedGroup) {
+    setselectedGroup(selectedGroup);
+
+    const fetchOptions = async () => {
+      console.log('craziii2')
+      try {
+        const response = await get(`/api/vinculos/mydisciplinasbyprof/${selectedGroup}`);
+        console.log('unidade')
+        console.log(response)
+        setOptions(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  }
+
+  const customStyles = {
+    option: (provided) => ({
+      ...provided,
+      color: 'black',        // Change the color of the text
+      fontSize: '16px',     // Change the font size
+    }),
+  };
 
   const columns = useMemo(
     () => [
@@ -141,7 +170,26 @@ const EcommerceCheckout = (props) => {
     [selectedRows]
   );
 
+  const fetchProfs = async () => {
+    try {
+      
+      const response = await get('/api/clientes');
+      console.log("response")
+      console.log(response)
+      const transformedData = response.map((item) => ({
+        label: `Professor(a): ${item.nome}`,
+        value: item.id,
+      }));
+      console.log(transformedData)
+  
+      setoptionGroup(transformedData);
+      setisLoading(false);
 
+    } catch (error) {
+     
+
+    }
+  };
 
   const fetchUsers = async (page) => {
     try {
@@ -268,21 +316,13 @@ const EcommerceCheckout = (props) => {
     enableReinitialize: true,
   
     initialValues: {
-      id: '',
-      nome: '',
-      especificacao: '',
-      valor: '',
-      unidade: '',
-      validade: '',
-      tipo: ''
+      userId: '',
+      disciplinaId: '',
+      experimentoId: '',
     },
     validationSchema: Yup.object({
-      nome: Yup.string().required("Por favor, digite o nome do tipo de componente"),
-      especificacao: Yup.string().required("Por favor, digite a especificacao do tipo de componente"),
-      valor: Yup.number().required("Por favor, digite o valor do tipo de componente"),
-      unidade: Yup.string().required("Por favor, digite a unidade do tipo de componente"),
-      validade: Yup.date().required("Por favor, digite a validade do componente"),
-      tipo: Yup.string().required("Por favor, digite se o tipo de componente é consumível"),
+      disciplinaId: Yup.mixed().required("Please select an option"),
+      experimentoId: Yup.mixed().required("Please select an option"),
     }),
     onSubmit: (values) => {
       const handleSubmission = async () => {
@@ -294,7 +334,7 @@ const EcommerceCheckout = (props) => {
 
         try {
           const response = await post('/api/tipocomponente/salvar', {
-            nome: values.nome,
+            nome: selectedGroup,
             especificacao: values.especificacao,
             valor: values.valor,
             unidadeId: values.unidade,
@@ -457,6 +497,7 @@ const EcommerceCheckout = (props) => {
 	};
   
     useEffect(() => {
+      fetchProfs();
       fetchUsers(0);
       fetchOptions();
      // carregaSeEdit(componenteId)
@@ -589,13 +630,13 @@ const EcommerceCheckout = (props) => {
                                         </Button>
                                         {hasNotInputs ? (
                                           <Button color="primary" type="submit" disabled>
-                                            Submeter formulário2
+                                            Submeter formulário
                                           </Button>
                                           ) : (
                                             <Link to={`/solicitarAddConf`} state={{ selectedRows }}>
-                                          <Button color="primary" type="submit">
-                                            Submeter formulário3
-                                          </Button>
+                                              <Button color="primary" type="submit">
+                                                Submeter formulário
+                                              </Button>
                                             </Link>
                                         )}
                                       </div>
@@ -617,75 +658,28 @@ const EcommerceCheckout = (props) => {
                                   </div>
 
                                   <div className="mb-3">
-                                    <Row>
-                                      <Col md={6}>
-                                        <Label className="form-label">Nome*</Label>
-                                        <Input
-                                          name="nome"
-                                          className="form-control"
-                                          placeholder="Digite o nome do Tipo de Componente"
-                                          type="nome"
-                                          onChange={validation.handleChange}
-                                          onBlur={validation.handleBlur}
-                                          value={validation.values.nome || ""}
-                                          invalid={
-                                            validation.touched.nome && validation.errors.nome ? true : false
-                                          }
-                                        />
-                                        {validation.touched.nome && validation.errors.nome ? (
-                                          <FormFeedback type="invalid">{validation.errors.nome}</FormFeedback>
-                                        ) : null}
-                                      </Col>
-                                      <Col md={6}>
-                                        <Label className="form-label">especificacao*</Label>
-                                        <Input
-                                          name="especificacao"
-                                          className="form-control"
-                                          placeholder="Digite a especificação do tipo de Componente"
-                                          type="text"
-                                          onChange={validation.handleChange}
-                                          onBlur={validation.handleBlur}
-                                          value={validation.values.especificacao || ""}
-                                          invalid={
-                                            validation.touched.especificacao && validation.errors.especificacao ? true : false
-                                          }
-                                        />
-                                        {validation.touched.especificacao && validation.errors.especificacao ? (
-                                          <FormFeedback type="invalid">{validation.errors.especificacao}</FormFeedback>
-                                        ) : null}
-                                      </Col>
+                                  <Row >
+                                    <Col lg={2} className="mb-3">
+                                      <label htmlFor="name">Professor</label>
+                                      <Select2
+                                        value={selectedGroup}
+                                        onChange={handleSelectGroup}
+                                        options={optionGroup}
+                                        className="select2-selection"
+                                        isLoading={isLoading}
+                                        styles={customStyles}
+                                      />
+                                    </Col>
 
-                                    </Row>
-                                  </div>
-                                  <div className="mb-3">
-                                    <Row>
-                                      <Col md={6}>
-                                        <Label className="form-label">Valor*</Label>
-                                        <Input
-                                          name="valor"
-                                          className="form-control"
-                                          placeholder="Digite o valor do tipo de Componente"
-                                          type="number"
-                                          onChange={validation.handleChange}
-                                          onBlur={validation.handleBlur}
-                                          value={validation.values.valor || ""}
-                                          invalid={
-                                            validation.touched.valor && validation.errors.valor ? true : false
-                                          }
-                                        />
-                                        {validation.touched.valor && validation.errors.valor ? (
-                                          <FormFeedback type="invalid">{validation.errors.valor}</FormFeedback>
-                                        ) : null}
-                                      </Col>
-                                      <Col md={6}>
-                                        <Label className="form-label">Unidade</Label>
+                                    <Col lg={2} className="mb-3">
+                                    <Label className="form-label">Disciplinas</Label>
                                         <Input
                                         type="select"
-                                        name="unidade"
+                                        name="disciplina"
                                         onChange={validation.handleChange}
                                         onBlur={validation.handleBlur}
-                                        value={validation.values.unidade || ""}
-                                        invalid={validation.touched.unidade && validation.errors.unidade}
+                                        value={validation.values.disciplinaId || ""}
+                                        invalid={validation.touched.disciplinaId && validation.errors.disciplinaId}
                                       >
                                         <option value="">Selecione</option>
                                         {options2.map((option) => (
@@ -694,65 +688,48 @@ const EcommerceCheckout = (props) => {
                                         </option>
                                       ))}
                                       </Input>
-                                      {validation.touched.unidade && validation.errors.unidade && (
-                                        <FormFeedback type="invalid">{validation.errors.unidade}</FormFeedback>
+                                      {validation.touched.disciplinaId && validation.errors.disciplinaId && (
+                                        <FormFeedback type="invalid">{validation.errors.disciplinaId}</FormFeedback>
                                       )}
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                  <div className="mb-3">
-                                    <Row>
-                                      <Col md={6}>
-                                        <Label className="form-label">Validade</Label>
-                                        <Input
-                                          name="validade"
-                                          className="form-control"
-                                          placeholder="Digite a data de validade"
-                                          type="date"
-                                          onChange={validation.handleChange}
-                                          onBlur={validation.handleBlur}
-                                          value={validation.values.validade || ""}
-                                          invalid={
-                                            validation.touched.validade && validation.errors.validade ? true : false
-                                          }
-                                        />
-                                        {validation.touched.validade && validation.errors.validade ? (
-                                          <FormFeedback type="invalid">{validation.errors.validade}</FormFeedback>
-                                        ) : null}
-                                      </Col>
-                                      <Col md={6}>
-                                        <Label className="form-label">consumível</Label>
+                                    </Col>
+
+                                    <Col lg={2} className="mb-3">
+                                    <Label className="form-label">Experimentos</Label>
                                         <Input
                                         type="select"
-                                        name="tipo"
+                                        name="experimento"
                                         onChange={validation.handleChange}
                                         onBlur={validation.handleBlur}
-                                        value={validation.values.tipo || ""}
-                                        invalid={validation.touched.tipo && validation.errors.tipo}
+                                        value={validation.values.experimentoId || ""}
+                                        invalid={validation.touched.experimentoId && validation.errors.experimentoId}
                                       >
                                         <option value="">Selecione</option>
-                                        <option value="1">Sim</option>
-                                        <option value="0">Não</option>
+                                        {options2.map((option) => (
+                                        <option key={option.id} value={option.id}>
+                                          {option.nome}
+                                        </option>
+                                      ))}
                                       </Input>
-                                      {validation.touched.tipo && validation.errors.tipo && (
-                                        <FormFeedback type="invalid">{validation.errors.tipo}</FormFeedback>
+                                      {validation.touched.experimentoId && validation.errors.experimentoId && (
+                                        <FormFeedback type="invalid">{validation.errors.experimentoId}</FormFeedback>
                                       )}
-                                      </Col>
-                                    </Row>
+                                    </Col>
+
+
+                                    <Col lg={2} className="align-self-center">
+                                      <div className="d-grid">
+                                        <input
+                                          type="button"
+                                          className="btn btn-primary"
+                                          value="Procurar"
+                                          onClick={() => onDeleteFormRow(formRow.id)}
+                                        />
+                                      </div>
+                                    </Col>
+                                  </Row>
                                   </div>
-                                  <div className="d-flex justify-content-end">
-                                  {hasNotInputs ? (
-                                    <Button color="primary" type="submit" disabled>
-                                      Submeter formulário2
-                                    </Button>
-                                    ) : (
-                                      <Link to={`/solicitarAddConf`} state={{ selectedRows }}>
-                                    <Button color="primary" type="submit">
-                                      Submeter formulário3
-                                    </Button>
-                                      </Link>
-                                  )}
-                                  </div>
+                                  
+                                  
                                 </Form>
                               </TabPane>
                             </TabContent>

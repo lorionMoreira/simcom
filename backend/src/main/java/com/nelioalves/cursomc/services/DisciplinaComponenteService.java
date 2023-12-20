@@ -67,13 +67,10 @@ public class DisciplinaComponenteService {
         return repo.findByDisciplinaIdAndExperimentoIdIsNull(disciplina);
     }
     
-    public Page<DisciplinaComponente> findMyDisciplinas(int pageNumber, int pageSize) {
+    public Page<DisciplinaComponente> findMyDisciplinas(Integer userId, int pageNumber, int pageSize) {
         // Create a PageRequest object with pagination parameters
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         
-        User user  = clienteservice.findMySelf();
-      
-        Integer userId = user.getId();
 
         Page<DisciplinaComponente> result = repo.findWitPaginationAndWhere(userId,pageRequest);
 

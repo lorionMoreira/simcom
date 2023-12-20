@@ -55,7 +55,25 @@ public class DisciplinaComponenteResource {
     public ResponseEntity<Page<DisciplinaComponente>> findMyDisciplinas(
             @RequestParam(value = "page", defaultValue = "0") int pageNumber,
             @RequestParam(value = "size", defaultValue = "2") int pageSize) {
-        Page<DisciplinaComponente> entities = service.findMyDisciplinas(pageNumber, pageSize);
+
+        User user  = clienteservice.findMySelf();
+
+        Integer userId = user.getId();
+
+        Page<DisciplinaComponente> entities = service.findMyDisciplinas(userId,pageNumber, pageSize);
+        return ResponseEntity.ok().body(entities);
+    }
+
+    @GetMapping("/mydisciplinasbyprof")
+    public ResponseEntity<Page<DisciplinaComponente>> findMyDisciplinasByProf(
+            @RequestParam(value = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "size", defaultValue = "2") int pageSize) {
+
+        User user  = clienteservice.findMySelf();
+
+        Integer userId = user.getId();
+
+        Page<DisciplinaComponente> entities = service.findMyDisciplinas(userId,pageNumber, pageSize);
         return ResponseEntity.ok().body(entities);
     }
     
