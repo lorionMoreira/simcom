@@ -58,7 +58,7 @@ console.log(demoData)
         Header: 'Local',
         Cell: ({ row }) => (
           <div className="d-flex justify-content-center">
-              {row.original.user !== null ? `Em posse de: ${row.original.user.nome}` : 'Em posse de: IFBA'}
+              {row.original.user !== null ? `Em posse de: ${row.original.user.nome}` : 'Em posse de: IFBA2'}
           </div>
         ),
       }
