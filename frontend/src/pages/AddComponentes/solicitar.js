@@ -64,7 +64,8 @@ const EcommerceCheckout = (props) => {
   const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [options2, setOptions] = useState([]);
-
+  const [optDisc, setOptDisc] = useState([]);
+  const [optExp, setOptExp] = useState([]);
   const [inputHiddenName, setInputHiddenName] = useState('');
   const [inputHiddenId, setInputHiddenId] = useState(0);
 
@@ -79,18 +80,79 @@ const EcommerceCheckout = (props) => {
   function handleSelectGroup(selectedGroup) {
     setselectedGroup(selectedGroup);
 
-    const fetchOptions = async () => {
+    const getdisciplinas = async () => {
       console.log('craziii2')
+      let userId = selectedGroup.value;
+      console.log(userId)
       try {
-        const response = await get(`/api/vinculos/mydisciplinasbyprof/${selectedGroup}`);
+        const response = await get(`/api/vinculos/mydisciplinasbyprof/${userId}?page=0&size=10`);
         console.log('unidade')
         console.log(response)
-        setOptions(response);
+        console.log(options2)
+
+        const extractedDisciplina = response.content.map(item => ({
+          id: item.disciplinaId.id,
+          nome: item.disciplinaId.nome,
+        }));
+
+        setOptDisc(extractedDisciplina)
+
+       
       } catch (error) {
         console.log(error);
       }
     };
 
+    validation.setValues(prevValues => ({
+      ...prevValues,
+      userId: selectedGroup.value,
+    }));
+    
+    getdisciplinas();
+  }
+
+  function handleSelectDisciplines(e) {
+    console.log('foi21')
+    console.log(e.target.value)
+
+    let disciplinaId = e.target.value;
+    let userId = selectedGroup.value;
+    
+    const getExperimento = async (disciplinaId,userId) => {
+
+      try {
+        const response = await get(`/api/vinculos/mydisciplinas/experimentos/findbyprof/${disciplinaId}/${userId}?page=0&size=10`);
+        console.log('dsa')
+        console.log(response)
+        console.log(options2)
+
+        const extractedDisciplina = response.content.map(item => ({
+          id: item.disciplinaId.id,
+          nome: item.disciplinaId.nome,
+        }));
+
+        setOptExp(extractedDisciplina)
+
+
+       
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    validation.setValues(prevValues => ({
+      ...prevValues,
+      disciplinaId: disciplinaId,
+    }));
+
+    getExperimento(disciplinaId,userId)
+  }
+
+  function handleSelectExperimentos(e) {
+    validation.setValues(prevValues => ({
+      ...prevValues,
+      experimentoId: e.target.value,
+    }));
   }
 
   const customStyles = {
@@ -676,13 +738,13 @@ const EcommerceCheckout = (props) => {
                                         <Input
                                         type="select"
                                         name="disciplina"
-                                        onChange={validation.handleChange}
+                                        onChange={handleSelectDisciplines}
                                         onBlur={validation.handleBlur}
                                         value={validation.values.disciplinaId || ""}
                                         invalid={validation.touched.disciplinaId && validation.errors.disciplinaId}
                                       >
                                         <option value="">Selecione</option>
-                                        {options2.map((option) => (
+                                        {optDisc.map((option) => (
                                         <option key={option.id} value={option.id}>
                                           {option.nome}
                                         </option>
@@ -698,13 +760,13 @@ const EcommerceCheckout = (props) => {
                                         <Input
                                         type="select"
                                         name="experimento"
-                                        onChange={validation.handleChange}
+                                        onChange={handleSelectExperimentos}
                                         onBlur={validation.handleBlur}
                                         value={validation.values.experimentoId || ""}
                                         invalid={validation.touched.experimentoId && validation.errors.experimentoId}
                                       >
                                         <option value="">Selecione</option>
-                                        {options2.map((option) => (
+                                        {optExp.map((option) => (
                                         <option key={option.id} value={option.id}>
                                           {option.nome}
                                         </option>

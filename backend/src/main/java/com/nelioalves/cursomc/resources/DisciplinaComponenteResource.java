@@ -64,14 +64,13 @@ public class DisciplinaComponenteResource {
         return ResponseEntity.ok().body(entities);
     }
 
-    @GetMapping("/mydisciplinasbyprof")
+    @GetMapping("/mydisciplinasbyprof/{userId}")
     public ResponseEntity<Page<DisciplinaComponente>> findMyDisciplinasByProf(
             @RequestParam(value = "page", defaultValue = "0") int pageNumber,
-            @RequestParam(value = "size", defaultValue = "2") int pageSize) {
+            @RequestParam(value = "size", defaultValue = "2") int pageSize,
+            @PathVariable Integer userId) {
 
-        User user  = clienteservice.findMySelf();
 
-        Integer userId = user.getId();
 
         Page<DisciplinaComponente> entities = service.findMyDisciplinas(userId,pageNumber, pageSize);
         return ResponseEntity.ok().body(entities);
@@ -101,6 +100,33 @@ public class DisciplinaComponenteResource {
 		
 		// mudar a forma como isso é feito acima;
         
+    }
+
+    @GetMapping("/mydisciplinas/experimentos/findbyprof/{disciplinaId}/{userId}")
+    public ResponseEntity<Page<DisciplinaComponente>> getEntitiesWithConditionsbyprof(
+            @RequestParam(value = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize,
+            @PathVariable Integer disciplinaId,
+            @PathVariable Integer userId) {
+
+        //User user  = clienteservice.findMySelf();
+
+        DisciplinaComponente vinculo = service.findVinculoByDisciplinaId(disciplinaId,userId);
+
+        if (userId == vinculo.getUserId().getId()) {
+
+            // Integer myDisciplinaId = vinculo.getDisciplinaId().getId();
+            Integer myDisciplinaId = disciplinaId;
+
+            Page<DisciplinaComponente> entities = service.findMyExperimentosWithPagination(myDisciplinaId, userId ,pageNumber, pageSize);
+            return ResponseEntity.ok().body(entities);
+        }else {
+            String errorMessage = "Unauthorized access. You are not allowed to delete this record.";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // or ResponseEntity.ok().body(Page.empty())
+        }
+
+        // mudar a forma como isso é feito acima;
+
     }
     
     @PostMapping("/salvar")
