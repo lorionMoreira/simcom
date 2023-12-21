@@ -39,11 +39,6 @@ import Pagination from '../../components/Common/Pagination';
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-//Import Images
-import img1 from "../../assets/images/product/img-1.png"
-import img7 from "../../assets/images/product/img-7.png"
-
-
 
 
 const EcommerceCheckout = (props) => {
@@ -124,11 +119,11 @@ const EcommerceCheckout = (props) => {
         const response = await get(`/api/vinculos/mydisciplinas/experimentos/findbyprof/${disciplinaId}/${userId}?page=0&size=10`);
         console.log('dsa')
         console.log(response)
-        console.log(options2)
+
 
         const extractedDisciplina = response.content.map(item => ({
-          id: item.disciplinaId.id,
-          nome: item.disciplinaId.nome,
+          id: item.experimentoId.id,
+          nome: item.experimentoId.nome,
         }));
 
         setOptExp(extractedDisciplina)
@@ -149,10 +144,13 @@ const EcommerceCheckout = (props) => {
   }
 
   function handleSelectExperimentos(e) {
+
     validation.setValues(prevValues => ({
       ...prevValues,
       experimentoId: e.target.value,
     }));
+
+    setIsButtonDisabled(true)
   }
 
   const customStyles = {
@@ -319,44 +317,9 @@ const EcommerceCheckout = (props) => {
     }
   };
 
-  const handleAction = async (id) => {
-    // Function for handling remove action
 
-    try {
-      setLoading(true);
-      const response = await get(`/api/tipocomponente/findbyid/${id}`);
-      console.log('aqui')
-      console.log(response)
-      /*
-      setAlert(true);
-      setAlertMsg('Disciplina Apagada com sucesso');
-      setcolorAlert('success');
-      */
-      setInputHiddenName(response.nome)
-      setInputHiddenId(response.id)
-      setIsButtonDisabled(false)
-      setactiveTab("2")
-
-      //fetchUsers(currentPage);
   
-    } catch (error) {
-      //setError(error);
-      setLoading(false);
-      setAlert(true);
-      setAlertMsg('Error ao apagar a disciplina');
-      setcolorAlert('danger');
-      console.log(error);
-    }
-  
-  };
-  
-  const handleUnsetInput = async () => {
 
-    setInputHiddenName('')
-    setInputHiddenId(0)
-    setIsButtonDisabled(true)
-
-  }
 
   // Function to add a row ID to the selectedRows array
   const addSelection = (id, tipoComponenteId,nome,especificacao,valor,unidade,qtdDisponivel) => {
@@ -487,11 +450,11 @@ const EcommerceCheckout = (props) => {
         }
       };
 
-    if(inputHiddenId != 0 && values.id){
-      handleUpdate(values.id);
-    }else{
-      handleSubmission2();
-    }
+      if(inputHiddenId != 0 && values.id){
+        handleUpdate(values.id);
+      }else{
+        handleSubmission2();
+      }
       
   }
   });
@@ -529,7 +492,7 @@ const EcommerceCheckout = (props) => {
       console.log(error);
     }
   };
-
+  /*
   function formatDateontrary(dateString) {
 
     const dateStr = dateString;
@@ -553,7 +516,7 @@ const EcommerceCheckout = (props) => {
     
     return formattedDate;
   }
-
+  */
   const handlePageChange = page => {
 		fetchUsers(page-1);
 	};
@@ -720,79 +683,114 @@ const EcommerceCheckout = (props) => {
                                   </div>
 
                                   <div className="mb-3">
-                                  <Row >
-                                    <Col lg={2} className="mb-3">
-                                      <label htmlFor="name">Professor</label>
-                                      <Select2
-                                        value={selectedGroup}
-                                        onChange={handleSelectGroup}
-                                        options={optionGroup}
-                                        className="select2-selection"
-                                        isLoading={isLoading}
-                                        styles={customStyles}
-                                      />
-                                    </Col>
-
-                                    <Col lg={2} className="mb-3">
-                                    <Label className="form-label">Disciplinas</Label>
-                                        <Input
-                                        type="select"
-                                        name="disciplina"
-                                        onChange={handleSelectDisciplines}
-                                        onBlur={validation.handleBlur}
-                                        value={validation.values.disciplinaId || ""}
-                                        invalid={validation.touched.disciplinaId && validation.errors.disciplinaId}
-                                      >
-                                        <option value="">Selecione</option>
-                                        {optDisc.map((option) => (
-                                        <option key={option.id} value={option.id}>
-                                          {option.nome}
-                                        </option>
-                                      ))}
-                                      </Input>
-                                      {validation.touched.disciplinaId && validation.errors.disciplinaId && (
-                                        <FormFeedback type="invalid">{validation.errors.disciplinaId}</FormFeedback>
-                                      )}
-                                    </Col>
-
-                                    <Col lg={2} className="mb-3">
-                                    <Label className="form-label">Experimentos</Label>
-                                        <Input
-                                        type="select"
-                                        name="experimento"
-                                        onChange={handleSelectExperimentos}
-                                        onBlur={validation.handleBlur}
-                                        value={validation.values.experimentoId || ""}
-                                        invalid={validation.touched.experimentoId && validation.errors.experimentoId}
-                                      >
-                                        <option value="">Selecione</option>
-                                        {optExp.map((option) => (
-                                        <option key={option.id} value={option.id}>
-                                          {option.nome}
-                                        </option>
-                                      ))}
-                                      </Input>
-                                      {validation.touched.experimentoId && validation.errors.experimentoId && (
-                                        <FormFeedback type="invalid">{validation.errors.experimentoId}</FormFeedback>
-                                      )}
-                                    </Col>
-
-
-                                    <Col lg={2} className="align-self-center">
-                                      <div className="d-grid">
-                                        <input
-                                          type="button"
-                                          className="btn btn-primary"
-                                          value="Procurar"
-                                          onClick={() => onDeleteFormRow(formRow.id)}
+                                    <Row >
+                                      <Col lg={3} className="mb-3">
+                                        <label htmlFor="name">Professor</label>
+                                        <Select2
+                                          value={selectedGroup}
+                                          onChange={handleSelectGroup}
+                                          options={optionGroup}
+                                          className="select2-selection"
+                                          isLoading={isLoading}
+                                          styles={customStyles}
                                         />
-                                      </div>
-                                    </Col>
-                                  </Row>
+                                      </Col>
+
+                                      <Col lg={3} className="mb-3">
+                                      <Label className="form-label">Disciplinas</Label>
+                                          <Input
+                                          type="select"
+                                          name="disciplina"
+                                          onChange={handleSelectDisciplines}
+                                          onBlur={validation.handleBlur}
+                                          value={validation.values.disciplinaId || ""}
+                                          invalid={validation.touched.disciplinaId && validation.errors.disciplinaId}
+                                        >
+                                          <option value="">Selecione</option>
+                                          {optDisc.map((option) => (
+                                          <option key={option.id} value={option.id}>
+                                            {option.nome}
+                                          </option>
+                                        ))}
+                                        </Input>
+                                        {validation.touched.disciplinaId && validation.errors.disciplinaId && (
+                                          <FormFeedback type="invalid">{validation.errors.disciplinaId}</FormFeedback>
+                                        )}
+                                      </Col>
+
+                                      <Col lg={3} className="mb-3">
+                                      <Label className="form-label">Experimentos</Label>
+                                          <Input
+                                          type="select"
+                                          name="experimento"
+                                          onChange={handleSelectExperimentos}
+                                          onBlur={validation.handleBlur}
+                                          value={validation.values.experimentoId || ""}
+                                          invalid={validation.touched.experimentoId && validation.errors.experimentoId}
+                                        >
+                                          <option value="">Selecione</option>
+                                          {optExp.map((option) => (
+                                          <option key={option.id} value={option.id}>
+                                            {option.nome}
+                                          </option>
+                                        ))}
+                                        </Input>
+                                        {validation.touched.experimentoId && validation.errors.experimentoId && (
+                                          <FormFeedback type="invalid">{validation.errors.experimentoId}</FormFeedback>
+                                        )}
+                                      </Col>
+
+
+                                      <Col lg={3} className="align-self-center">
+                                        <div className="d-grid">
+                                          <input
+                                            type="button"
+                                            className="btn btn-primary"
+                                            value="Procurar"
+                                            onClick={() => onDeleteFormRow(formRow.id)}
+                                            style={{
+                                              marginTop: '10px', // Adjust the value as needed
+                                            }}
+                                            disabled={isButtonDisabled}
+                                          />
+                                        </div>
+                                      </Col>
+                                    </Row>
                                   </div>
                                   
                                   
                                 </Form>
+
+                                <div className="mb-2">
+                                      <div className="mb-3">
+                                        <TableContainer
+                                          columns={columns}
+                                          data={data}
+                                          className="custom-header-css"
+                                          handleInputSearch={handleInputSearch}
+                                          onPageChange={handlePageChange}
+                                        />
+                                        <Pagination  key={loading} currentPage={currentPage+1}
+                                        totalPages={totalRows} onPageChange={handlePageChange} />
+                                      </div>
+                                      
+                                      <div className="d-flex justify-content-end mt-3 ">
+                                        <Button color="secondary" type="submit" className="me-2" onClick={handleClear}>
+                                            Limpar formulário
+                                        </Button>
+                                        {hasNotInputs ? (
+                                          <Button color="primary" type="submit" disabled>
+                                            Submeter formulário
+                                          </Button>
+                                          ) : (
+                                            <Link to={`/solicitarAddConf`} state={{ selectedRows }}>
+                                              <Button color="primary" type="submit">
+                                                Submeter formulário
+                                              </Button>
+                                            </Link>
+                                        )}
+                                      </div>
+                                </div>
                               </TabPane>
                             </TabContent>
                           </div>

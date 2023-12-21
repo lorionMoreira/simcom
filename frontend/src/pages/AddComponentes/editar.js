@@ -21,7 +21,7 @@ const Editar = props => {
   const columns = useMemo(
     () => [
       {
-        Header: 'Identificador',
+        Header: 'Identificador3',
         accessor: 'id',
       },
       {

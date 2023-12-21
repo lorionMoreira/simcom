@@ -41,7 +41,7 @@ const UserProfileExperimentoAdd = props => {
     () => [
 
       {
-        Header: 'Identificador',
+        Header: 'Identificador2',
         accessor: 'id',
       },
       {

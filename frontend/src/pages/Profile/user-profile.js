@@ -270,10 +270,7 @@ const handleInputSearch = async (buscaString) => {
                   <div className="d-flex">
                     <CardTitle className="mb-4">Minhas disciplinas</CardTitle>
                     <div className={`ms-1 ${styles.myicon  } `}>
-                    <Link to="/profile/mydisciplina"  >                  
-                      <i className="bx bx-add-to-queue" style={{ fontSize: '24px', color: '#556ee6'  }}></i>
-                    </Link>
-                      
+
                     </div>
                   </div>
 
@@ -283,6 +280,9 @@ const handleInputSearch = async (buscaString) => {
                       className="custom-header-css"
                       handleInputSearch={handleInputSearch}
                       onPageChange={handlePageChange}
+                      showButtonLink={true}
+                      buttonLink="/profile/mydisciplina"
+                      buttonText="Adicionar disciplina"
                   />
                 <Pagination  key={loading} currentPage={currentPage+1}
                  totalPages={totalRows} onPageChange={handlePageChange} />

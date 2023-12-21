@@ -55,6 +55,8 @@ const TableContainer = ({
   const handleInputClean = () => {
     setSearchTerm('')
     onPageChange(1)
+    console.log("headerGroups.headers.length")
+    console.log(headerGroups[0].headers.length)
   };
 
   return (
@@ -135,22 +137,28 @@ const TableContainer = ({
           </thead>
 
           <tbody {...getTableBodyProps()}>
-            {page.map(row => {
-              prepareRow(row);
-              return (
-                <Fragment key={row.getRowProps().key}>
-                  <tr>
-                    {row.cells.map(cell => {
-                      return (
+          {page.length > 0 ? (
+              page.map(row => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map(cell => (
                         <td key={cell.id} {...cell.getCellProps()}>
                           {cell.render("Cell")}
                         </td>
-                      );
-                    })}
-                  </tr>
-                </Fragment>
-              );
-            })}
+                      ))}
+                    </tr>
+                  </Fragment>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={headerGroups[0].headers?.length || 0}>
+                  a busca não gerou resultados válidos
+                </td>
+              </tr>
+          )}
           </tbody>
         </Table>
       </div>
