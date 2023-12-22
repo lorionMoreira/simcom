@@ -230,7 +230,7 @@ const Componentes = props => {
     console.log(`Edit clicked for id ${id}`);
 
     try {
-      const response = await del(`/vinculos/delete/${id}`);
+      const response = await del(`/api/vinculos/delete/${id}`);
 
       setAlert(true);
       setAlertMsg('Disciplina desvinculada com sucesso!');
