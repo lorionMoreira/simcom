@@ -531,7 +531,7 @@ const UserProfileExperimentoAdd = props => {
                   />
                 </Collapse>
 
-                <Pagination  key={loading2} currentPage2={currentPage2+1}
+                <Pagination  key={loading2} currentPage={currentPage2+1}
                  totalPages={totalRows2} onPageChange={handlePageChange} />
 
                 <div className="d-flex justify-content-end mt-3 ">

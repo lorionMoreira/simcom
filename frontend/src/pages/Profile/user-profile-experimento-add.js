@@ -47,16 +47,18 @@ const UserProfileExperimentoAdd = props => {
       {
         Header: 'Ações',
         Cell: ({ row }) => (
+          <>
+          {row.original?.experimentoId?.id && (
           <div className="d-flex justify-content-center">
 
 
-            <Link to={`/experimentoadd/${row.original.experimentoId.id}`} className="d-inline-block mx-2">
+            <Link to={`/experimentoadd/${row.original?.experimentoId?.id}`} className="d-inline-block mx-2">
               <i className="bx bx-add-to-queue" style={{ fontSize: '24px', color: '#556ee6'  }}></i>
            </Link> 
 
             <a
               className="d-inline-block "
-              onClick={() => handleEdit(row.original.experimentoId.id)}//experimentoId
+              onClick={() => handleEdit(row.original?.experimentoId?.id)}//experimentoId
               title="Editar experimento"
             >
               <i className="bx bx-edit-alt" style={{ fontSize: '24px', color: '#556ee6'  }}></i>
@@ -64,13 +66,15 @@ const UserProfileExperimentoAdd = props => {
 
             <a
               className="d-inline-block mx-2"
-              onClick={() => handleRemove(row.original.experimentoId.id)}//experimentoId
+              onClick={() => handleRemove(row.original?.experimentoId?.id)}//experimentoId
               title="Apagar experimento"
             >
               <i className="bx bx-trash-alt" style={{ fontSize: '24px', color: '#DC143C'  }}></i>
             </a>
             
           </div>
+          )}
+          </>
         ),
       },
     ],
@@ -179,8 +183,6 @@ const UserProfileExperimentoAdd = props => {
   // fetch users
   const fetchUsers = async (page) => {
 
-    
-
     console.log(disciplinaId)
     
     try {
@@ -192,6 +194,7 @@ const UserProfileExperimentoAdd = props => {
           disciplinaId: disciplinaId
         },
       });
+
       console.log("response")
       console.log(response)
       setData(response.content);
@@ -368,7 +371,7 @@ const UserProfileExperimentoAdd = props => {
                   />
                 </Collapse>
                 <Pagination  key={loading} currentPage={currentPage+1}
-                 totalPages={totalRows} onPageChange={handlePageChange} />
+                  totalPages={totalRows} onPageChange={handlePageChange} />
             </Card>
 
             <Card className="p-3">

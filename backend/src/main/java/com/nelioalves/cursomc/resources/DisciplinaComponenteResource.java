@@ -91,7 +91,7 @@ public class DisciplinaComponenteResource {
 			// Integer myDisciplinaId = vinculo.getDisciplinaId().getId();
 			Integer myDisciplinaId = disciplinaId;
 			
-			Page<DisciplinaComponente> entities = service.findMyExperimentosWithPagination(myDisciplinaId, user.getId() ,pageNumber, pageSize);
+			Page<DisciplinaComponente> entities = service.findMyExperimentosWithPagination2(myDisciplinaId, user.getId() ,pageNumber, pageSize);
 			return ResponseEntity.ok().body(entities);
 		}else {
 	        String errorMessage = "Unauthorized access. You are not allowed to delete this record.";

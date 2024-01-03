@@ -20,10 +20,16 @@ public interface DisciplinaComponenteRepository extends JpaRepository<Disciplina
     Page<DisciplinaComponente> findWitPaginationAndWhere(@Param("userId") Integer userId, Pageable pageable);
     
     @Query("SELECT dc FROM DisciplinaComponente dc  WHERE (1 = 1) AND " +
-            "(dc.userId.id = :userId ) AND (dc.disciplinaId.id = :disciplinaId) ")
+            "(dc.userId.id = :userId ) AND (dc.disciplinaId.id = :disciplinaId)")
     Page<DisciplinaComponente> findMyExperimentosWithPagination(@Param("disciplinaId") Integer disciplinaId,
     		@Param("userId") Integer userId,	Pageable pageable);
-    
+
+    @Query("SELECT dc FROM DisciplinaComponente dc  WHERE (1 = 1) AND " +
+            "(dc.userId.id = :userId ) AND (dc.disciplinaId.id = :disciplinaId) AND dc.experimentoId IS NOT NULL")
+    Page<DisciplinaComponente> findMyExperimentosWithPagination2(@Param("disciplinaId") Integer disciplinaId,
+                                                                @Param("userId") Integer userId,	Pageable pageable);
+
+
     @Query(value = "SELECT * FROM disciplinas_componentes dc WHERE dc.user_id = :userId AND dc.disciplina_id = :disciplinaId LIMIT 1", nativeQuery = true)
     DisciplinaComponente findVinculoBydisciplinaIdAndUserId(@Param("disciplinaId") Integer disciplinaId,@Param("userId") Integer userId);
     

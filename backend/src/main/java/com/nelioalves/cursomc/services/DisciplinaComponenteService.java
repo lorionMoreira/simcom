@@ -120,6 +120,16 @@ public class DisciplinaComponenteService {
         return result;
 
     }
+
+    public Page<DisciplinaComponente> findMyExperimentosWithPagination2(Integer  disciplinaId, Integer userId , int pageNumber, int pageSize) {
+        // Create a PageRequest object with pagination parameters
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        Page<DisciplinaComponente> result = repo.findMyExperimentosWithPagination2(disciplinaId,userId, pageRequest);
+
+        return result;
+
+    }
     
 
 }
