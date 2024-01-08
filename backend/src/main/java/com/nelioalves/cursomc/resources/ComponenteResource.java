@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
+import com.nelioalves.cursomc.services.ReservaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.HttpStatus;
 import com.nelioalves.cursomc.domain.Componente;
 import com.nelioalves.cursomc.domain.DisciplinaComponente;
 import com.nelioalves.cursomc.domain.Reserva;
@@ -38,6 +41,9 @@ public class ComponenteResource {
 
     @Autowired
     private ComponenteService service;
+
+    @Autowired
+    private ReservaService reservaService;
     /*
     @GetMapping("/buscar")
     public ResponseEntity<Page<Componente>> getEntitiesWithPagination(
@@ -114,6 +120,31 @@ public class ComponenteResource {
     public ResponseEntity<List<Componente>> findAll() {
         List<Componente> componentes = service.findAll();
         return ResponseEntity.ok().body(componentes);
+    }
+
+    @PostMapping("/getlistaexperimento")
+    public ResponseEntity<?> getListaExperimento(@RequestBody Map<String, Object> requestBody) {
+
+
+            Integer experimentoid = (Integer) requestBody.get("experimentoid");
+
+            List<Componente> componentes = service.findAll();
+
+            List<Reserva> reservas = reservaService.findByExperimentoId(experimentoid);
+
+
+            // Extract the tipoComponente.id values from the Reserva list
+                    List<Integer> tipoComponenteIds = reservas.stream()
+                            .map(reserva -> reserva.getTipoComponenteId().getId())
+                            .collect(Collectors.toList());
+
+            // Filter the Componente list based on matching tipoComponente.id values
+                    List<Componente> filteredComponentes = componentes.stream()
+                            .filter(componente -> tipoComponenteIds.contains(componente.getTipoComponente().getId()))
+                            .collect(Collectors.toList());
+
+            return new ResponseEntity<>(reservas, HttpStatus.OK);
+
     }
 
     @PostMapping("/salvar")

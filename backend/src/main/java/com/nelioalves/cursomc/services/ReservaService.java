@@ -43,7 +43,10 @@ public class ReservaService {
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " ));
 		
 	}
-    
+
+    public List<Reserva> findByExperimentoId(Integer experimentoId) {
+        return repo.findByExperimentoId(experimentoId);
+    }
     
     public Page<Reserva> findMyReservas(int pageNumber, int pageSize, Integer experimentoId) {
         // Create a PageRequest object with pagination parameters

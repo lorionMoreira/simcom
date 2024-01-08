@@ -145,12 +145,25 @@ const EcommerceCheckout = (props) => {
 
   function handleSelectExperimentos(e) {
 
+    const getReservas = async (experimentoId) => {
+    
+      const response = await get(`/api/reservas/myreserva/buscar/${experimentoId}`, {
+        params: {
+          page: 0,
+          size: 10,
+        },
+      });
+
+    }
+
     validation.setValues(prevValues => ({
       ...prevValues,
       experimentoId: e.target.value,
     }));
 
-    setIsButtonDisabled(true)
+    getReservas(e.target.value)
+
+    setIsButtonDisabled(false)
   }
 
   const customStyles = {
@@ -532,41 +545,25 @@ const EcommerceCheckout = (props) => {
       console.log('Selected Rows:', selectedRows);
       sethasNotInputs(selectedRows.length === 0)
     }, [selectedRows]);
-    /*
-    const carregaSeEdit = async (componenteId) => {
+    
+    const getListofProfExp = async () => {
       
+      const experimentoid = validation.values.experimentoId;
 
-      if(componenteId == 0){
-        return;
-      }
+
       
       try {
         setLoading(true);
-        setCurrentPage(0)
-        const response = await get(`/api/componentes/findbyid/${componenteId}`);
+
+        const response = await post(`/api/componentes/getlistaexperimento`,{
+          experimentoid:  experimentoid
+        });
   
         console.log('asd');
         console.log(response);
         console.log(formatDateontraryEst(response.validade))
 
-        validation.setValues({
-          id: response.tipoComponente.id,
-          nome: response.tipoComponente.nome, 
-          tipo: response.tipoComponente.tipo,
-          especificacao: response.tipoComponente.especificacao,
-          valor: response.tipoComponente.valor,
-          validade:formatDateontrary(response.tipoComponente.validade) ,
-          unidade: response.tipoComponente.unidadeId.id 
-        });
 
-        validationf.setValues({
-          id: response.id,
-          fornecedor_data:  formatDateontraryEst(response.fornecedorData),
-          fornecedor: response.fornecedor,
-          quantidade: response.quantidade,
-          validade: formatDateontraryEst(response.validade),
-          observacao: response.obs,
-        });
 
         setInputHiddenName(response.tipoComponente.nome)
         setInputHiddenId(response.tipoComponente.id)
@@ -580,7 +577,7 @@ const EcommerceCheckout = (props) => {
         console.log(error)
       }
     };
-    */
+    
     const isNameValid = inputHiddenId > 0;
 
   return (
@@ -746,8 +743,8 @@ const EcommerceCheckout = (props) => {
                                           <input
                                             type="button"
                                             className="btn btn-primary"
-                                            value="Procurar"
-                                            onClick={() => onDeleteFormRow(formRow.id)}
+                                            value="Procurar2"
+                                            onClick={() => getListofProfExp()}
                                             style={{
                                               marginTop: '10px', // Adjust the value as needed
                                             }}

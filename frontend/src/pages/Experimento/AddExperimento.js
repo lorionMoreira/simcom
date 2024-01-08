@@ -485,7 +485,7 @@ const UserProfileExperimentoAdd = props => {
               <CardBody>
                   <CardTitle>Componentes do experimento</CardTitle>
                   <CardSubtitle className={`font-14 text-muted ${styles.myButton  } `}>
-                    Abaixo contém a lista de experimentos cadastrados
+                    Abaixo contém a lista de experimentos cadastrados2
                     <button
                     onClick={t_col5}
                     className="btn btn-primary mo-mb-2"
@@ -507,7 +507,7 @@ const UserProfileExperimentoAdd = props => {
                       
                   />
                 </Collapse>
-                <Pagination  key={loading1} currentPage1={currentPage1+1}
+                <Pagination  key={loading1} currentPage={currentPage1+1}
                  totalPages={totalRows1} onPageChange={handlePageChange} />
             </Card>
 

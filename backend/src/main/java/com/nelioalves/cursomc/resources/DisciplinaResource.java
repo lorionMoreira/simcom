@@ -59,6 +59,8 @@ public class DisciplinaResource {
         Page<Disciplina> entities = service.findWithConditionsAndPaginationPost(searchRequest, pageNumber, pageSize);
         return ResponseEntity.ok().body(entities);
     }
+
+
     
     @PostMapping("/salvar")
     public ResponseEntity<Disciplina> insert(@Valid @RequestBody Disciplina obj) {
