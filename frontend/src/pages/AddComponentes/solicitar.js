@@ -48,12 +48,14 @@ const EcommerceCheckout = (props) => {
   document.title="Componentes | Adicionar";
 
   const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRows2, setSelectedRows2] = useState([]);
   const [hasNotInputs, sethasNotInputs] = useState(true);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [activeTab, setactiveTab] = useState("1")
   const [activeTabb, setActiveTabb] = useState("1");
   const [data, setData] = useState([]);
+  const [data2, setData2] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalRows, setTotalRows] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -243,6 +245,68 @@ const EcommerceCheckout = (props) => {
     [selectedRows]
   );
 
+  const columns2 = useMemo(
+    () => [
+      {
+        Header: 'Seleção',
+        Cell: ({ row }) => (
+          <div className="d-flex justify-content-center">
+
+            {row.original ? ( // Check if componente exists
+            <div>
+              {selectedRows2.some((selectedRow) => selectedRow.id === row.original.id) === false && (
+                <div
+                  className="d-inline-block mx-1"
+
+                >
+                  <i className="bx bx-checkbox" style={{ fontSize: '24px' }}></i>
+                </div>
+              )}
+
+              {selectedRows2.some((selectedRow) => selectedRow.id === row.original.id) === true && (
+                <div
+                  className="d-inline-block mx-1"
+                  onClick={() => removeSelection(row.original.cpid)}
+                >
+                  <i className="bx bx-check-square" style={{ fontSize: '23px', color: '#556ee6' }}></i>
+                </div>
+              )}
+
+            </div>
+          ) : null}
+            
+          </div>
+        ),
+      },
+      {
+        Header: 'OrderId',
+        accessor: 'cpId',
+      },
+      {
+        Header: 'Q. pedida',
+        accessor: 'quantidade',
+      },
+      {
+        Header: 'Nome',
+        accessor: 'nome',
+      },
+      {
+        Header: 'Valor',
+        Cell: ({ row }) => (
+          <div className="d-flex justify-content-center">
+            {row.original?.valor} 
+          </div>
+        ),
+      },
+      {
+        Header: 'Especificacao',
+        accessor: 'especificacao',
+      },
+  
+    ],
+    [selectedRows2]
+  );
+
   const fetchProfs = async () => {
     try {
       
@@ -264,7 +328,7 @@ const EcommerceCheckout = (props) => {
     }
   };
 
-  const fetchUsers = async (page) => {
+  const fetchUsers = async (page) => { 
     try {
       setLoading(true);
       const response = await get('/api/componentes/buscar/solicitado', {
@@ -550,8 +614,6 @@ const EcommerceCheckout = (props) => {
       
       const experimentoid = validation.values.experimentoId;
 
-
-      
       try {
         setLoading(true);
 
@@ -559,16 +621,12 @@ const EcommerceCheckout = (props) => {
           experimentoid:  experimentoid
         });
   
-        console.log('asd');
+        console.log('asd55');
         console.log(response);
-        console.log(formatDateontraryEst(response.validade))
+
+        setData2(response)
 
 
-
-        setInputHiddenName(response.tipoComponente.nome)
-        setInputHiddenId(response.tipoComponente.id)
-        //setactiveTab("2") //aqui
-        setActiveTabb("2")
 
   
       } catch (error) {
@@ -648,7 +706,7 @@ const EcommerceCheckout = (props) => {
                                       
                                       <div className="d-flex justify-content-end mt-3 ">
                                         <Button color="secondary" type="submit" className="me-2" onClick={handleClear}>
-                                            Limpar formulário
+                                            Limpar formulário2
                                         </Button>
                                         {hasNotInputs ? (
                                           <Button color="primary" type="submit" disabled>
@@ -761,14 +819,12 @@ const EcommerceCheckout = (props) => {
                                 <div className="mb-2">
                                       <div className="mb-3">
                                         <TableContainer
-                                          columns={columns}
-                                          data={data}
+                                          columns={columns2}
+                                          data={data2}
                                           className="custom-header-css"
                                           handleInputSearch={handleInputSearch}
                                           onPageChange={handlePageChange}
                                         />
-                                        <Pagination  key={loading} currentPage={currentPage+1}
-                                        totalPages={totalRows} onPageChange={handlePageChange} />
                                       </div>
                                       
                                       <div className="d-flex justify-content-end mt-3 ">

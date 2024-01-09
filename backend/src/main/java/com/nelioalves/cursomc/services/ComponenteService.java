@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.nelioalves.cursomc.domain.TipoComponente;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -264,4 +265,8 @@ public class ComponenteService {
         return objDto;
     }
 
+    public Componente getselectedComp(Integer tipoComponenteId, Integer quantidade) {
+		List<Componente> components  = repo.findGetselectedComp(tipoComponenteId,quantidade);
+		return components.isEmpty() ? null : components.get(0);
+    }
 }

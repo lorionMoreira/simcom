@@ -3,12 +3,13 @@ package com.nelioalves.cursomc.resources;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import com.nelioalves.cursomc.services.ReservaService;
+import com.nelioalves.cursomc.services.TipoComponenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import com.nelioalves.cursomc.dto.ComponenteDTO;
 import com.nelioalves.cursomc.dto.ComponenteDTO2;
 import com.nelioalves.cursomc.dto.ReservaDTO;
 import com.nelioalves.cursomc.dto.TipoComponenteDTO;
+import com.nelioalves.cursomc.dto.CaixaDTO;
 import com.nelioalves.cursomc.resources.utils.ListComponenteDTOconverter;
 import com.nelioalves.cursomc.resources.utils.ReservaDTOconverter;
 import com.nelioalves.cursomc.services.ComponenteService;
@@ -44,6 +46,9 @@ public class ComponenteResource {
 
     @Autowired
     private ReservaService reservaService;
+
+    @Autowired
+    private TipoComponenteService tpService;
     /*
     @GetMapping("/buscar")
     public ResponseEntity<Page<Componente>> getEntitiesWithPagination(
@@ -125,27 +130,38 @@ public class ComponenteResource {
     @PostMapping("/getlistaexperimento")
     public ResponseEntity<?> getListaExperimento(@RequestBody Map<String, Object> requestBody) {
 
+        List<CaixaDTO> caixas = new ArrayList<>();
 
-            Integer experimentoid = (Integer) requestBody.get("experimentoid");
+        String experimentoIdStr = (String) requestBody.get("experimentoid");
+        Integer experimentoid = Integer.parseInt(experimentoIdStr);
 
-            List<Componente> componentes = service.findAll();
+        //List<Componente> componentes = service.findAll();
 
-            List<Reserva> reservas = reservaService.findByExperimentoId(experimentoid);
+        List<Reserva> reservas = reservaService.findByExperimentoId(experimentoid);
+
+        for (Reserva reserva : reservas) {
+
+            TipoComponente tp = tpService.find(reserva.getTipoComponenteId().getId());
+
+            Componente componente = service.getselectedComp(reserva.getTipoComponenteId().getId(),reserva.getQuantidade());
+
+            CaixaDTO caixa;
+            if(componente != null){
+                caixa = new CaixaDTO(componente.getId(),componente.getQuantidade(),
+                        tp.getId(),tp.getNome(),tp.getEspecificacao(),tp.getValor(),reserva.getQuantidade());
+            }else{
+                caixa = new CaixaDTO(null,null,
+                        tp.getId(),tp.getNome(),tp.getEspecificacao(),tp.getValor(),reserva.getQuantidade());
+            }
+            caixas.add(caixa);
+        }
 
 
-            // Extract the tipoComponente.id values from the Reserva list
-                    List<Integer> tipoComponenteIds = reservas.stream()
-                            .map(reserva -> reserva.getTipoComponenteId().getId())
-                            .collect(Collectors.toList());
-
-            // Filter the Componente list based on matching tipoComponente.id values
-                    List<Componente> filteredComponentes = componentes.stream()
-                            .filter(componente -> tipoComponenteIds.contains(componente.getTipoComponente().getId()))
-                            .collect(Collectors.toList());
-
-            return new ResponseEntity<>(reservas, HttpStatus.OK);
+        return new ResponseEntity<>(caixas, HttpStatus.OK);
 
     }
+
+
 
     @PostMapping("/salvar")
     public ResponseEntity<Componente> insert(@Valid @RequestBody ComponenteDTO objDto) {

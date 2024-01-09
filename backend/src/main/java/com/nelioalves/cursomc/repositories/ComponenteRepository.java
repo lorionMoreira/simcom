@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import java.util.List;
 import com.nelioalves.cursomc.domain.Componente;
 
 public interface ComponenteRepository extends JpaRepository<Componente, Integer> {
@@ -26,5 +26,8 @@ public interface ComponenteRepository extends JpaRepository<Componente, Integer>
             "(tc.especificacao LIKE %:inputString% OR tc.nome LIKE %:inputString% OR c.fornecedor LIKE %:inputString%)")
     Page<Componente> findWithConditionsAndPaginationEmprestado(@Param("inputString") String inputString,
             Pageable pageable);
+
+    @Query("SELECT c FROM Componente c WHERE c.tipoComponente.id = :tipoComponenteId AND c.quantidade > :quantidade AND c.user.id IS NULL")
+    List<Componente> findGetselectedComp(@Param("tipoComponenteId") Integer tipoComponenteId,@Param("quantidade") Integer quantidade);
 
 }

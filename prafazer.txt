@@ -1,0 +1,78 @@
+
+// a ideia é pegar uma lista de componentes com tipo de componentes que só aparecem uma unica vez e dizer se  tem disponivel ou não a partir da quantidade que se pede. 
+
+
+{
+componenteId: 12,
+componente.user_id:null ,
+tipoComponenteId: 4,
+tipoComponente.nome: lorion,
+tipoComponente.tipo: 1,
+tipoComponente.especificacao: "dsadsadsa",
+tipoComponente.valor:1000,
+disponivel: sim
+
+}
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+dado experimentoId
+
+List<Reserva> reservas = reservaService.findByExperimentoId(experimentoid);
+
+foreach reservas {
+
+		tipoComponente tp = new tp.find(reservas.tpId)	
+		
+		Componente componente = serviceComp.getComp(reservas.tpId,reservas.qtd)
+	if (componente != null){
+
+		Caixa caixa	= new Caixa(tp.id,tp.||,componente.id, componente.||, sim)
+	}else{
+		Caixa caixa	= new Caixa(tp.id,tp.||,null,não)
+	}
+
+	return caixa
+}
+
+
+@@@@@@@
+
+select * from componente where tipopc = $reservas.tpId AND quantidade > reservas.qtd AND user_id is NULL
+
+
+@@@@@@@@@@
+
+
+[
+    {
+        "cpId": 49,
+        "cpQuantidade": 20,
+        "tpId": 4,
+        "nome": "Diodo",
+        "especificacao": "Diodo Zener 4,6 Volts",
+        "valor": "BZX794V6",
+        "tpQuantidade": 2
+    },
+    {
+        "cpId": 35,
+        "cpQuantidade": 900,
+        "tpId": 6,
+        "nome": "Capacitor Eletrolítico",
+        "especificacao": "Capacitor Eletrolítico 100V",
+        "valor": "10",
+        "tpQuantidade": 2
+    },
+    {
+        "cpId": null,
+        "cpQuantidade": null,
+        "tpId": 8,
+        "nome": "Display LCD",
+        "especificacao": "Display LCD 2 linha 16 colunas",
+        "valor": "LCM1602",
+        "tpQuantidade": 2
+    }
+]
+não permitir que um usuario cadastre varios componentes de mesmo tipo_componente no mesmo experimento
+
