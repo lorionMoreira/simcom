@@ -1,7 +1,6 @@
 import React, {  useState,useMemo, useEffect  } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import styles from "./style.module.css";
 import {
   Button,
@@ -33,7 +32,7 @@ import { withTranslation } from "react-i18next";
 const UserProfileExperimentoAdd = props => {
 
   const { experimentoId } = useParams();
-  const navigate = useNavigate();
+
   const [selectedRows, setSelectedRows] = useState([]);
 
   const [hasNotInputs, sethasNotInputs] = useState(true);
@@ -155,12 +154,21 @@ const UserProfileExperimentoAdd = props => {
 
   // Function to add a row ID to the selectedRows array
   const addSelection = (id, tipoComponenteId,nome,especificacao,valor,unidade) => {
-    setSelectedRows((prevSelectedRows) => [...prevSelectedRows, { id, tipoComponenteId,nome,
-      especificacao,valor,unidade,experimentoId }]);
+    const isIdAlreadyPresent = data1.some(row => row.tipoComponenteId.id === tipoComponenteId);
+
+    if (!isIdAlreadyPresent) {
+      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, { id, tipoComponenteId,nome,
+        especificacao,valor,unidade,experimentoId }]);
 
       sethasNotInputs(false);
-  };
-
+    }else{
+      const duplicateAlertMsg = "An item with the same ID already exists.";
+      setAlertMsg(duplicateAlertMsg);
+  
+      // Show the alert
+      setAlert(true);
+    }
+  }
   // Function to remove a row ID from the selectedRows array
   const removeSelection = (id) => {
     setSelectedRows((prevSelectedRows) =>
@@ -290,25 +298,6 @@ const UserProfileExperimentoAdd = props => {
       return Array.from(updatedIds); // Convert the Set back to an array and return it
     });
   };
-
-  const handleSubmit = () => {
-    const hasDuplicates = selectedRows.some(selectedRow => 
-      data1.some(data1Row => data1Row.tipoComponenteId.id === selectedRow.tipoComponenteId)
-    );
-
-    if (hasDuplicates) {
-      // Set the message for the alert
-      // Assuming alertMsg is a state setter for alert message
-      window.scrollTo(0, 0);
-      setAlertMsg("Erro: Um tipo de componente já existente na lista foi selecionado.");
-      // Show the alert
-      // Assuming setAlert is a state setter for showing the alert
-      setcolorAlert('danger');
-      setAlert(true);
-    } else {
-      navigate(`/experimentoaddConf/${experimentoId}`, { state: { selectedRows } });
-    }
-  };
   
   // fetch users
   const fetchUsers1 = async (page) => {
@@ -436,7 +425,7 @@ const UserProfileExperimentoAdd = props => {
       console.log(error);
     }
 
-  }; 
+  };
   const handleClear = () => {
     
     setSelectedRows([]);
@@ -505,7 +494,7 @@ const UserProfileExperimentoAdd = props => {
               <CardBody>
                   <CardTitle>Componentes do experimento</CardTitle>
                   <CardSubtitle className={`font-14 text-muted ${styles.myButton  } `}>
-                    Abaixo contém a lista de experimentos cadastrados
+                    Abaixo contém a lista de experimentos cadastrados2
                     <button
                     onClick={t_col5}
                     className="btn btn-primary mo-mb-2"
@@ -527,7 +516,7 @@ const UserProfileExperimentoAdd = props => {
                       
                   />
                 </Collapse>
-                <Pagination  key={loading1} currentPage1={currentPage1+1}
+                <Pagination  key={loading1} currentPage={currentPage1+1}
                  totalPages={totalRows1} onPageChange={handlePageChange} />
             </Card>
 
@@ -551,7 +540,7 @@ const UserProfileExperimentoAdd = props => {
                   />
                 </Collapse>
 
-                <Pagination  key={loading2} currentPage2={currentPage2+1}
+                <Pagination  key={loading2} currentPage={currentPage2+1}
                  totalPages={totalRows2} onPageChange={handlePageChange} />
 
                 <div className="d-flex justify-content-end mt-3 ">
@@ -563,9 +552,11 @@ const UserProfileExperimentoAdd = props => {
                       {isEditing ? 'Editar formulário' : 'Submeter formulário'}
                     </Button>
                   ) : (
-                  <Button color="primary" type="button" onClick={handleSubmit}>
-                    {isEditing ? 'Editar formulário' : 'Submeter formulário'}
-                  </Button>
+                    <Link to={`/experimentoaddConf/${experimentoId}`} state={{ selectedRows }}>
+                      <Button color="primary" type="submit">
+                        {isEditing ? 'Editar formulário' : 'Submeter formulário'}
+                      </Button>
+                    </Link>
                 )}
                 </div>
 

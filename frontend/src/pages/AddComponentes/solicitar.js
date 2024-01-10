@@ -51,6 +51,8 @@ const EcommerceCheckout = (props) => {
   const [selectedRows2, setSelectedRows2] = useState([]);
   const [hasNotInputs, sethasNotInputs] = useState(true);
 
+  const [hasNotInputs2, sethasNotInputs2] = useState(true);
+
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [activeTab, setactiveTab] = useState("1")
   const [activeTabb, setActiveTabb] = useState("1");
@@ -252,39 +254,55 @@ const EcommerceCheckout = (props) => {
         Cell: ({ row }) => (
           <div className="d-flex justify-content-center">
 
-            {row.original ? ( // Check if componente exists
+            {row.original.cpId ? ( // Check if componente exists
             <div>
-              {selectedRows2.some((selectedRow) => selectedRow.id === row.original.id) === false && (
-                <div
-                  className="d-inline-block mx-1"
-
+              {selectedRows2.some((selectedRow) => selectedRow.cpId === row.original.cpId) === false && (
+                <div className="d-inline-block mx-1"
+                onClick={() => addSelection2(row.original.cpId, 
+                  row.original.tpId,
+                  row.original.cpQuantidade,
+                  row.original.tpQuantidade,
+                  row.original.especificacao,
+                  row.original.nome,
+                  row.original.valor
+                  )}
                 >
                   <i className="bx bx-checkbox" style={{ fontSize: '24px' }}></i>
                 </div>
               )}
 
-              {selectedRows2.some((selectedRow) => selectedRow.id === row.original.id) === true && (
+              {selectedRows2.some((selectedRow) => selectedRow.cpId === row.original.cpId) === true && (
                 <div
                   className="d-inline-block mx-1"
-                  onClick={() => removeSelection(row.original.cpid)}
+                  onClick={() => removeSelection2(row.original.cpId)}
                 >
-                  <i className="bx bx-check-square" style={{ fontSize: '23px', color: '#556ee6' }}></i>
+                  <i className="bx bx-check-square" style={{ fontSize: '24px', color: '#556ee6' }}></i>
                 </div>
               )}
 
             </div>
-          ) : null}
+          ) : 
+          <div className="d-inline-block mx-1">
+              <i className="fas fa-border-style" style={{ fontSize: '21px' ,color: '#DC143C'}}></i>
+          </div>
+          }
             
           </div>
         ),
       },
       {
         Header: 'OrderId',
-        accessor: 'cpId',
+        Cell: ({ row }) => (
+          <div className="d-flex justify-content-center">
+            {row.original.cpId ? (<div>
+              {row.original.cpId}
+            </div>):'Não disponivel'} 
+          </div>
+        ),
       },
       {
         Header: 'Q. pedida',
-        accessor: 'quantidade',
+        accessor: 'tpQuantidade',
       },
       {
         Header: 'Nome',
@@ -406,6 +424,15 @@ const EcommerceCheckout = (props) => {
       sethasNotInputs(false);
   };
 
+    // Function to add a row ID to the selectedRows array
+    const addSelection2 = (cpId, tpId, cpQuantidade, tpQuantidade, especificacao, nome, valor) => {
+      setSelectedRows2(prevSelectedRows2 => [...prevSelectedRows2, 
+        { cpId, tpId, cpQuantidade, tpQuantidade, especificacao, nome, valor }
+      ]);
+    
+      sethasNotInputs(false);
+    };
+
   // Function to remove a row ID from the selectedRows array
   const removeSelection = (id) => {
     setSelectedRows((prevSelectedRows) =>
@@ -413,6 +440,11 @@ const EcommerceCheckout = (props) => {
     );
   };
 
+  const removeSelection2 = (cpId) => {
+    setSelectedRows2((prevSelectedRows) =>
+      prevSelectedRows.filter((row) => row.cpId !== cpId )
+    );
+  };
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -609,6 +641,11 @@ const EcommerceCheckout = (props) => {
       console.log('Selected Rows:', selectedRows);
       sethasNotInputs(selectedRows.length === 0)
     }, [selectedRows]);
+
+    useEffect(() => {
+      console.log('Selected Rows:', selectedRows);
+      sethasNotInputs2(selectedRows2.length === 0)
+    }, [selectedRows2]);
     
     const getListofProfExp = async () => {
       
@@ -621,13 +658,24 @@ const EcommerceCheckout = (props) => {
           experimentoid:  experimentoid
         });
   
-        console.log('asd55');
-        console.log(response);
-
         setData2(response)
 
+        const filteredResponses = response.filter(resp => resp.cpId !== null);
 
+        const newSelectedRows = filteredResponses.map(resp => ({
+          cpId: resp.cpId,
+          tpId: resp.tpId,
+          cpQuantidade: resp.cpQuantidade,
+          tpQuantidade: resp.tpQuantidade,
+          especificacao: resp.especificacao,
+          nome: resp.nome,
+          valor: resp.valor
+        }));
+        
+        setSelectedRows2(newSelectedRows);
+        
 
+        console.log(selectedRows2)
   
       } catch (error) {
         //setError(error);
@@ -831,14 +879,14 @@ const EcommerceCheckout = (props) => {
                                         <Button color="secondary" type="submit" className="me-2" onClick={handleClear}>
                                             Limpar formulário
                                         </Button>
-                                        {hasNotInputs ? (
+                                        {hasNotInputs2 ? (
                                           <Button color="primary" type="submit" disabled>
-                                            Submeter formulário
+                                            Submeter formulário2
                                           </Button>
                                           ) : (
-                                            <Link to={`/solicitarAddConf`} state={{ selectedRows }}>
+                                            <Link to={`/solicitarAddConf`} state={{ selectedRows2 }}>
                                               <Button color="primary" type="submit">
-                                                Submeter formulário
+                                                Submeter formulário2
                                               </Button>
                                             </Link>
                                         )}
