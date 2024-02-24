@@ -76,3 +76,5 @@ select * from componente where tipopc = $reservas.tpId AND quantidade > reservas
 ]
 não permitir que um usuario cadastre varios componentes de mesmo tipo_componente no mesmo experimento
 
+https://www.jetbrains.com/idea/download/download-thanks.html?platform=windows&code=IIC
+
