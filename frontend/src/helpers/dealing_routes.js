@@ -144,6 +144,33 @@ const postJwtLoginJavaHome = data => {
     });
 };
 
+const postJwtLoginJavaInternal = data => {
+  return axios
+    .post(url.POST_JWT_LOGIN_INTERNAL, data)
+    .then(response => {
+
+      console.log(response)
+      if (response.status >= 200 || response.status <= 299) {
+        const token = response.headers.authorization; // Replace 'your-token-header' with the actual header key containing the token
+        const responseData = response.data;
+
+        // Create an object with the token and response data
+        const result = {
+          token: token,
+          data: responseData
+        };
+
+        return result;
+      }
+
+      throw response.data;
+    })
+    .catch(err => {
+           
+      throw err;
+    });
+};
+
 // postForgetPwd
 const postJwtForgetPwd = data => post(url.POST_FAKE_JWT_PASSWORD_FORGET, data);
 
@@ -366,6 +393,7 @@ export {
   postJwtLogin,
   postJwtLoginJava,
   postJwtLoginJavaHome,
+  postJwtLoginJavaInternal,
   postJwtForgetPwd,
   postJwtProfile,
   getProductComents,

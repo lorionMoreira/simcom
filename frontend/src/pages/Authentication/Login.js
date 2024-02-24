@@ -40,8 +40,8 @@ const Login = props => {
 
 
     initialValues: {
-      email: process.env.REACT_APP_DEFAULTAUTH == 'dev' ? "nelio.iftm@gmail.com" : '',
-      password: process.env.REACT_APP_DEFAULTAUTH == 'dev' ? "123" : ''
+      email: process.env.REACT_APP_DEFAULTAUTH == 'dev' ? "" : '',//nelio.iftm@gmail.com
+      password: process.env.REACT_APP_DEFAULTAUTH == 'dev' ? "" : ''//123
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),

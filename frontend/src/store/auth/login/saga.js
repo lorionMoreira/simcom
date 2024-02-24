@@ -11,7 +11,8 @@ import {
   postJwtLogin,
   postSocialLogin,
   postJwtLoginJava,
-  postJwtLoginJavaHome
+  postJwtLoginJavaHome,
+  postJwtLoginJavaInternal
 } from "../../../helpers/dealing_routes";
 import { exists } from "i18next";
 
@@ -19,7 +20,24 @@ const fireBaseBackend = getFirebaseBackend();
 
 function* loginUser({ payload: { user, history } }) { 
   try {
-    if (process.env.REACT_APP_DEFAULTAUTH == 'prod') {
+    let isInternal = isinternal();
+
+    if(isInternal){
+      console.log(user)
+
+      const response = yield call(postJwtLoginJavaInternal, {
+        email: user.email,
+        senha: user.password,
+      });
+
+      console.log('allow')
+      console.log(response)
+      
+      yield localStorage.setItem("authUser", JSON.stringify(response));
+      yield put(loginSuccess(response));
+      history('/componentes/buscar');
+
+    }else if (process.env.REACT_APP_DEFAULTAUTH == 'prod') {
       console.log(user)
 
       const response = yield call(postJwtLoginJava, {
@@ -34,7 +52,9 @@ function* loginUser({ payload: { user, history } }) {
       yield put(loginSuccess(response));
       history('/componentes/buscar');
     } else if (process.env.REACT_APP_DEFAULTAUTH == 'dev') {
+
       console.log(user)
+
 
       const response = yield call(postJwtLoginJavaHome, {
         email: user.email,
@@ -48,7 +68,18 @@ function* loginUser({ payload: { user, history } }) {
       yield put(loginSuccess(response));
       history('/componentes/buscar');
     }
-    console.log('asd')
+    
+
+    function isinternal() {
+      const currentUrl = new URL(window.location.href);
+      const hostname = currentUrl.hostname;
+    
+      // Regular expression to check if the hostname is an internal IP
+      const internalIpRegex = /^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)/;
+    
+      return internalIpRegex.test(hostname);
+    
+    }
     
   } catch (error) {
     console.log(error)
