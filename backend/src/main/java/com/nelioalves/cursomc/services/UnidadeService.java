@@ -23,7 +23,8 @@ public class UnidadeService {
     }
     
     public List<Unidade> findAll() {
-        return repo.findAll();
+
+        return repo.findAllByOrderByNomeAsc();
     }
 
 }

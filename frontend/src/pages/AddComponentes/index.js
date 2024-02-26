@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect   } from "react"
 import { del, get, post, put } from "../../helpers/api_helper";
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -9,6 +10,7 @@ import {
   FormGroup,
   Input,
   Label,
+  Button,
   Nav,
   NavItem,
   NavLink,
@@ -31,10 +33,11 @@ import Pagination from '../../components/Common/Pagination';
 // Formik validation
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { exists } from "i18next";
 
 
 const FormWizard = () => {
-
+  const navigate = useNavigate();
   //meta title
   document.title="Form Wizard | Skote - React Admin & Dashboard Template";
   
@@ -111,6 +114,23 @@ const FormWizard = () => {
     if (activeTabb !== tab) {
       setActiveTabb(tab);
     }
+  };
+
+  const fetchOptions = async () => {
+    console.log('craziii')
+    try {
+      const response = await get('/api/unidade/all');
+      console.log('unidade')
+      console.log(response)
+      setOptions(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBuscar = () => {
+    navigate('/componentes/buscar');
+    
   };
 
   const handleInputSearch = async (buscaString) => {
@@ -205,8 +225,16 @@ const FormWizard = () => {
 
   useEffect(() => {
     fetchUsers(0);
-    
+    fetchOptions();
   }, []);
+
+  const handleUnsetInput = async () => {
+
+    setInputHiddenName('')
+    setInputHiddenId(0)
+    setIsButtonDisabled(true)
+
+  }
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -224,8 +252,7 @@ const FormWizard = () => {
     validationSchema: Yup.object({
       nome: Yup.string().required("Por favor, digite o nome do tipo de componente"),
       especificacao: Yup.string().required("Por favor, digite a especificacao do tipo de componente"),
-      valor: Yup.number().required("Por favor, digite o valor do tipo de componente"),
-      unidade: Yup.string().required("Por favor, digite a unidade do tipo de componente"),
+      valor: Yup.string().required("Por favor, digite o valor do tipo de componente"),
       validade: Yup.date().required("Por favor, digite a validade do componente"),
       tipo: Yup.string().required("Por favor, digite se o tipo de componente é consumível"),
     }),
@@ -236,6 +263,15 @@ const FormWizard = () => {
         const parts = dateStr.split("-"); // Split the string by "-"
         const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`; // Rearrange the parts in "dd/MM/yyyy" format
         */
+        console.log(values.unidade);
+        
+        if(values.unidade === '') {
+          const adimensionalItem = options2.find(item => item.nome === 'ADIMENSIONAL');
+          if (adimensionalItem) {
+            values.unidade = adimensionalItem.id;
+          }
+        }
+        
 
         try {
           const response = await post('/api/tipocomponente/salvar', {
@@ -250,7 +286,7 @@ const FormWizard = () => {
 
           setInputHiddenName(response.nome)
           setInputHiddenId(response.id)
-          setactiveTab("2")
+          setactiveTab(2)
   
         } catch (error) {
           console.log(error);
@@ -261,6 +297,99 @@ const FormWizard = () => {
       handleSubmission();
   }
   });
+
+  const validationf = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+  
+    initialValues: {
+      id: '',
+      fornecedor_data: '',
+      fornecedor: '',
+      quantidade: '',
+      validade: '',
+      observacao: ''
+    },
+    validationSchema: Yup.object({
+      fornecedor_data: Yup.string().required("Por favor, digite a especificacao do tipo de componente"),
+      fornecedor: Yup.string().required("Por favor, digite o valor do tipo de componente"),
+      quantidade: Yup.number().required("Por favor, digite a unidade do tipo de componente"),
+      validade: Yup.string().required("Por favor, digite a especificacao do tipo de componente"),
+      //observacao: Yup.string().required("Por favor, digite se o tipo de componente é consumível"),
+    }),
+    onSubmit: (values) => {
+      const handleSubmission2 = async () => {
+
+        const formattedValues = {};
+        formattedValues.fornecedorData = formatDate2(values.fornecedor_data);
+        formattedValues.fornecedor = values.fornecedor;
+        formattedValues.quantidade = values.quantidade;
+        formattedValues.validade = formatDate2(values.validade);
+        formattedValues.observacao = values.observacao;
+        formattedValues.tipoComponenteId = inputHiddenId;
+        
+        try {
+          const response = await post('/api/componentes/salvar',formattedValues);
+          console.log(response)
+
+          //history.push('/new-page');
+          //window.location = '/componentes/buscar'
+          //navigate('/componentes/buscar');
+          setactiveTab(3)
+
+        //  console.log(props.router.navigate('/componentes/buscar'))
+        } catch (error) {
+          console.log(error);
+          
+        }
+      };
+
+      const handleUpdate = async (id) => {
+
+        const formattedValues = {};
+        formattedValues.fornecedorData = formatDate2(values.fornecedor_data);
+        formattedValues.fornecedor = values.fornecedor;
+        formattedValues.quantidade = values.quantidade;
+        formattedValues.validade = formatDate2(values.validade);
+        formattedValues.observacao = values.observacao;
+        formattedValues.tipoComponenteId = inputHiddenId;
+        
+        try {
+          const response = await put(`/componentes/update/${id}`,formattedValues);
+          console.log(response)
+
+          //history.push('/new-page');
+          //window.location = '/componentes/buscar'
+          //navigate('/componentes/buscar');
+          setactiveTab(3)
+
+        //  console.log(props.router.navigate('/componentes/buscar'))
+        } catch (error) {
+          console.log(error);
+          
+        }
+      };
+
+    if(inputHiddenId != 0 && values.id){
+      handleUpdate(values.id);
+    }else{
+      handleSubmission2();
+    }
+      
+  }
+  });
+
+  function formatDate2(dateString) {
+
+    const dateStr = dateString;
+    const parts = dateStr.split("-"); // Split the string by "-"
+    const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`; // Rearrange the parts in "dd/MM/yyyy" format
+  
+    return formattedDate;
+  }
+
+  const isNameValid = inputHiddenId > 0;
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -312,7 +441,7 @@ const FormWizard = () => {
                             }}
                             disabled={!(passedSteps || []).includes(3)}
                           >
-                            <span className="number">3.</span> Confirm Detail
+                            <span className="number">3.</span> Confirmação
                           </NavLink>
                         </NavItem>
                       </ul>
@@ -436,7 +565,7 @@ const FormWizard = () => {
                                             name="valor"
                                             className="form-control"
                                             placeholder="Digite o valor do tipo de Componente"
-                                            type="number"
+                                            type="text"
                                             onChange={validation.handleChange}
                                             onBlur={validation.handleBlur}
                                             value={validation.values.valor || ""}
@@ -525,95 +654,158 @@ const FormWizard = () => {
                         </TabPane>
                         <TabPane tabId={2}>
                           <div>
-                            <Form>
-                              <Row>
-                                <Col lg="6">
-                                  <div className="mb-3">
-                                    <Label for="basicpill-pancard-input5">
-                                      PAN Card
-                                    </Label>
-                                    <Input
-                                      type="text"
-                                      className="form-control"
-                                      id="basicpill-pancard-input5"
-                                      placeholder="Enter Your PAN No."
-                                    />
-                                  </div>
-                                </Col>
+                            <CardTitle>Detalhamento do pacote</CardTitle>
+                            <p className="card-title-desc">
+                              Preencha o formulário abaixo para a configuração do pacote de armazenamento do componente.
+                            </p>
 
-                                <Col lg="6">
-                                  <div className="mb-3">
-                                    <Label for="basicpill-vatno-input6">
-                                      VAT/TIN No.
-                                    </Label>
-                                    <Input
-                                      type="text"
-                                      className="form-control"
-                                      id="basicpill-vatno-input6"
-                                      placeholder="Enter Your VAT/TIN No."
-                                    />
-                                  </div>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Col lg="6">
-                                  <div className="mb-3">
-                                    <Label for="basicpill-cstno-input7">
-                                      CST No.
-                                    </Label>
-                                    <Input
-                                      type="text"
-                                      className="form-control"
-                                      id="basicpill-cstno-input7"
-                                      placeholder="Enter Your CST No."
-                                    />
-                                  </div>
-                                </Col>
 
-                                <Col lg="6">
-                                  <div className="mb-3">
-                                    <Label for="basicpill-servicetax-input8">
-                                      Service Tax No.
-                                    </Label>
-                                    <Input
-                                      type="text"
-                                      className="form-control"
-                                      id="basicpill-servicetax-input8"
-                                      placeholder="Enter Your Service Tax No."
-                                    />
-                                  </div>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Col lg="6">
-                                  <div className="mb-3">
-                                    <Label for="basicpill-companyuin-input9">
-                                      Company UIN
-                                    </Label>
-                                    <Input
-                                      type="text"
-                                      className="form-control"
-                                      id="basicpill-companyuin-input9"
-                                      placeholder="Enter Your Company UIN"
-                                    />
-                                  </div>
-                                </Col>
+                            <div className="p-4 border">
+                            <Form
+                                className="form-horizontal"
+                                onSubmit={(e) => {
+                                  e.preventDefault();
+                                  validationf.handleSubmit();
+                                  return false;
+                                }}
+                            >
 
-                                <Col lg="6">
-                                  <div className="mb-3">
-                                    <Label for="basicpill-declaration-input10">
-                                      Declaration
-                                    </Label>
-                                    <Input
-                                      type="text"
-                                      className="form-control"
-                                      id="basicpill-Declaration-input10"
-                                      placeholder="Declaration Details"
-                                    />
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Form>
+
+                                <div className="mb-3">
+                                  <Row>
+                                    <Col md={10}>
+                                      <Label className="form-label">Nome do tipo de componente *</Label>
+                                      <div className="input-group">
+                                        <Input
+                                          name="nome"
+                                          className="form-control"
+                                          placeholder="Digite o nome do Tipo de Componente"
+                                          type="nome"
+                                          onChange={validationf.handleChange}
+                                          disabled
+                                          value={inputHiddenName || ""}
+                                          valid={isNameValid} 
+                                          invalid={!isNameValid}
+                                        />
+                                        <button className="btn btn-primary" onClick={handleUnsetInput}  disabled={isButtonDisabled} 
+                                        type="button" id="inputGroupFileAddon04">
+                                          <i className="bx bx-x" />
+                                        </button>
+                                      </div>
+                                      {!isNameValid ? (
+                                        <FormFeedback type="invalid">Selecione o tipo de componente no passo - 1 </FormFeedback>
+                                      ) : null}
+                                    </Col>
+                                    <Col md={2}>
+                                      <Label className="form-label">Data*</Label>
+                                      <Input
+                                        name="fornecedor_data"
+                                        className="form-control"
+                                        placeholder="Digite a data do fornecimento do lote de componentes"
+                                        type="date"
+                                        onChange={validationf.handleChange}
+                                        onBlur={validationf.handleBlur}
+                                        value={validationf.values.fornecedor_data || ""}
+                                        invalid={
+                                          validationf.touched.fornecedor_data && validationf.errors.fornecedor_data ? true : false
+                                        }
+                                      />
+                                      {validationf.touched.fornecedor_data && validationf.errors.fornecedor_data ? (
+                                        <FormFeedback type="invalid">{validationf.errors.fornecedor_data}</FormFeedback>
+                                      ) : null}
+                                    </Col>
+
+                                  </Row>
+                                </div>
+                                <div className="mb-3">
+                                  <Row>
+                                    <Col md={6}>
+                                      <Label className="form-label">fornecedor*</Label>
+                                      <Input
+                                        name="fornecedor"
+                                        className="form-control"
+                                        placeholder="Digite o fornecedor do tipo de Componente"
+                                        type="text"
+                                        onChange={validationf.handleChange}
+                                        onBlur={validationf.handleBlur}
+                                        value={validationf.values.fornecedor || ""}
+                                        invalid={
+                                          validationf.touched.fornecedor && validationf.errors.fornecedor ? true : false
+                                        }
+                                      />
+                                      {validationf.touched.fornecedor && validationf.errors.fornecedor ? (
+                                        <FormFeedback type="invalid">{validationf.errors.fornecedor}</FormFeedback>
+                                      ) : null}
+                                    </Col>
+                                    <Col md={3}>
+                                      <Label className="form-label">quantidade*</Label>
+                                      <Input
+                                        name="quantidade"
+                                        className="form-control"
+                                        placeholder="Digite o quantidade do tipo de Componente"
+                                        type="number"
+                                        onChange={validationf.handleChange}
+                                        onBlur={validationf.handleBlur}
+                                        value={validationf.values.quantidade || ""}
+                                        invalid={
+                                          validationf.touched.quantidade && validationf.errors.quantidade ? true : false
+                                        }
+                                      />
+                                      {validationf.touched.quantidade && validationf.errors.quantidade ? (
+                                        <FormFeedback type="invalid">{validationf.errors.quantidade}</FormFeedback>
+                                      ) : null}
+                                    </Col>
+                                    <Col md={3}>
+                                      <Label className="form-label">Validade</Label>
+                                      <Input
+                                        name="validade"
+                                        className="form-control"
+                                        placeholder="Digite a data de validade"
+                                        type="date"
+                                        onChange={validationf.handleChange}
+                                        onBlur={validationf.handleBlur}
+                                        value={validationf.values.validade || ""}
+                                        invalid={
+                                          validationf.touched.validade && validationf.errors.validade ? true : false
+                                        }
+                                      />
+                                      {validationf.touched.validade && validationf.errors.validade ? (
+                                        <FormFeedback type="invalid">{validationf.errors.validade}</FormFeedback>
+                                      ) : null}
+                                    </Col>
+                                  </Row>
+                                </div>
+
+                                <div className="mb-3">
+                                  <Row>
+                                    <Col md={12}>
+                                      <Label className="form-label">observacao</Label>
+                                      <Input
+                                        name="observacao"
+                                        className="form-control"
+                                        placeholder="Digite a data de observacao"
+                                        type="text"
+                                        onChange={validationf.handleChange}
+                                        onBlur={validationf.handleBlur}
+                                        value={validationf.values.observacao || ""}
+                                        invalid={
+                                          validationf.touched.observacao && validationf.errors.observacao ? true : false
+                                        }
+                                      />
+                                      {validationf.touched.observacao && validationf.errors.observacao ? (
+                                        <FormFeedback type="invalid">{validationf.errors.observacao}</FormFeedback>
+                                      ) : null}
+                                    </Col>
+
+                                  </Row>
+                                </div>
+                                <div className="d-flex justify-content-end">
+                                  <button type="submit" className="btn btn-primary w-md">
+                                    Salvar
+                                  </button>
+                                </div>
+                              </Form>
+                            </div>
                           </div>
                         </TabPane>
                         <TabPane tabId={3}>
@@ -624,11 +816,13 @@ const FormWizard = () => {
                                   <i className="mdi mdi-check-circle-outline text-success display-4" />
                                 </div>
                                 <div>
-                                  <h5>Confirm Detail</h5>
+                                  <h5>Componente Salvo!</h5>
                                   <p className="text-muted">
-                                    If several languages coalesce, the grammar
-                                    of the resulting
+                                    Clique no botão abaixo para  voltar a tela de busca de componentes
                                   </p>
+                                  <Button color="primary" type="submit" className="me-2" onClick={handleBuscar}>
+                                    Menu Buscar
+                                  </Button>
                                 </div>
                               </div>
                             </Col>
@@ -636,36 +830,8 @@ const FormWizard = () => {
                         </TabPane>
                       </TabContent>
                     </div>
-                    <div className="actions clearfix">
-                      <ul>
-                        <li
-                          className={
-                            activeTab === 1 ? "previous disabled" : "previous"
-                          }
-                        >
-                          <Link
-                            to="#"
-                            onClick={() => {
-                              toggleTab(activeTab - 1)
-                            }}
-                          >
-                            Anterior
-                          </Link>
-                        </li>
-                        <li
-                          className={activeTab === 3 ? "next disabled" : "next"}
-                        >
-                          <Link
-                            to="#"
-                            onClick={() => {
-                              toggleTab(activeTab + 1)
-                            }}
-                          >
-                            Próximo
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
+
+
                   </div>
                 </CardBody>
               </Card>
