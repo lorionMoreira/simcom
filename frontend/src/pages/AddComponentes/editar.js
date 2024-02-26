@@ -146,7 +146,7 @@ const handleInputSearch = async (buscaString) => {
           {/* Render Breadcrumb */}
           <Breadcrumbs
             title={props.t("Componentes")}
-            breadcrumbItem={props.t("Buscar")}
+            breadcrumbItem={props.t("Adicionar")}
           />
               <Card className="p-3">
                 

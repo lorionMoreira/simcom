@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback,useState } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,7 +9,7 @@ import SimpleBar from "simplebar-react";
 // MetisMenu
 import MetisMenu from "metismenujs";
 import withRouter from "components/Common/withRouter";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 //i18n
 import { withTranslation } from "react-i18next";
@@ -18,20 +18,14 @@ const SidebarContent = props => {
 
 
   
-  //const ref = useRef();
+  const ref = useRef();
 
   const { demoData } = useSelector(state => ({
     demoData: state.Login.demoData,
   }));
 
-  const [activeLink, setActiveLink] = useState('');
-
-  const handleSetActiveLink = (link) => {
-    setActiveLink(link);
-  };
-
   const isAdmin =  demoData.data?.credentials.includes('ADMIN')
-  /*
+  
   const activateParentDropdown = useCallback((item) => {
     item.classList.add("active");
     const parent = item.parentElement;
@@ -155,16 +149,16 @@ const SidebarContent = props => {
       }
     }
   }
-  */
+  
   return (
     <React.Fragment>
-    <SimpleBar className="h-100" >
+    <SimpleBar className="h-100" ref={ref}>
       <div id="sidebar-menu">
         <ul className="metismenu list-unstyled" id="side-menu">
           <li className="menu-title">{props.t("Menu")} </li>
          {/* 
           <li>
-            <Link to="/#" >
+            <Link to="/#" className="has-arrow">
               <i className="bx bx-home-circle"></i>
               <span>{props.t("Dashboards")}</span>
             </Link>
@@ -176,31 +170,22 @@ const SidebarContent = props => {
           </li>
           */}
           <li>
-            <NavLink to="/#" style={{ color: '#556EE6'}}>
-              <i className="bx bxs-package" style={{ color: '#556EE6'}}></i>
+            <Link to="/#" className="has-arrow">
+              <i className="bx bxs-package"></i>
               <span>{props.t("Componentes")}</span>
-            </NavLink>
+            </Link>
             <ul className="sub-menu">
               <li>
-                <NavLink to="/componentes/buscar"
-                onClick={() => handleSetActiveLink('buscar')}
-                style={{ color: activeLink === 'buscar' ? '#556EE6' : 'inherit' }}
-                >{props.t("Buscar")}</NavLink>
+                <Link to="/componentes/buscar">{props.t("Buscar")}</Link>
               </li>
               {isAdmin &&              
               <li>
-                <NavLink to="/componentes/adicionar"
-                onClick={() => handleSetActiveLink('adicionar')}
-                style={{ color: activeLink === 'adicionar' ? '#556EE6' : 'inherit' }}
-                 >{props.t("Adicionar")}</NavLink>
+                <Link to="/componentes/adicionar">{props.t("Adicionar")}</Link>
               </li>
               }
 
               <li>
-                <NavLink to="/componentes/solicitar" 
-                onClick={() => handleSetActiveLink('solicitar')}
-                style={{ color: activeLink === 'solicitar' ? '#556EE6' : 'inherit' }}
-                >{props.t("Saída")}</NavLink>
+                <Link to="/componentes/solicitar">{props.t("Saída")}</Link>
               </li>
 
             </ul>
@@ -208,7 +193,7 @@ const SidebarContent = props => {
           {/* 
           {isAdmin && 
             <li>
-              <Link to="/#" >
+              <Link to="/#" className="has-arrow">
                 <i className="bx bx-chip"></i>
                 <span>{props.t("Componentes")}</span>
               </Link>
@@ -220,33 +205,26 @@ const SidebarContent = props => {
             </li>
           }
           */}
-
           <li>
-            <NavLink to="/#" style={{ color: '#556EE6'}}>
-              <i className="bx  bx-book-open" style={{ color: '#556EE6'}}></i>
+            <Link to="/#" className="has-arrow">
+              <i className="bx  bx-book-open"></i>
               <span>{props.t("Disciplina")}</span>
-            </NavLink>
+            </Link>
             <ul className="sub-menu">
               <li>
-                <NavLink to="/disciplinas/adicionar"
-                onClick={() => handleSetActiveLink('dadicionar')}
-                style={{ color: activeLink === 'dadicionar' ? '#556EE6' : 'inherit' }}
-                >{props.t("Adicionar")}</NavLink>
+                <Link to="/disciplinas/adicionar">{props.t("Adicionar")}</Link>
               </li>
             </ul>
           </li>
           {isAdmin && 
             <li>
-              <NavLink to="/#" style={{ color: '#556EE6'}}>
-                <i className="bx bx-user" style={{ color: '#556EE6'}}></i>
+              <Link to="/#" className="has-arrow">
+                <i className="bx bx-user"></i>
                 <span>{props.t("Usuários")}</span>
-              </NavLink>
+              </Link>
               <ul className="sub-menu">
                 <li>
-                  <NavLink to="/usuarios/adicionar"
-                  onClick={() => handleSetActiveLink('uadicionar')}
-                  style={{ color: activeLink === 'uadicionar' ? '#556EE6' : 'inherit' }}
-                  >{props.t("Gerenciar")}</NavLink>
+                  <Link to="/usuarios/adicionar">{props.t("Gerenciar")}</Link>
                 </li>
               </ul>
             </li>

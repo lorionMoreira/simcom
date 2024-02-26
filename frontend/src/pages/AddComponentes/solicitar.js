@@ -691,7 +691,7 @@ const EcommerceCheckout = (props) => {
       <div className="page-content">
         <Container fluid>
           {/* Render Breadcrumb */}
-          <Breadcrumbs title="Componentes" breadcrumbItem="Adicionar" />
+          <Breadcrumbs title="Componentes" breadcrumbItem="Saída" />
 
           <div className="checkout-tabs">
             <Row>
