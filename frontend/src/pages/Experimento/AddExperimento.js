@@ -240,7 +240,7 @@ const UserProfileExperimentoAdd = props => {
     
         try {
           console.log(values)
-          const response = await put(`/experimento/update/${experimentoId}`, {
+          const response = await put(`/api/experimento/update/${experimentoId}`, {
             id: values.id,
             nome: values.nome,
             obs: values.obs
@@ -394,7 +394,7 @@ const UserProfileExperimentoAdd = props => {
     console.log(experimentoid);
     try {
       setLoading1(true);
-      const response = await del(`/reservas/delete/${id}/${experimentoid}`);
+      const response = await del(`/api/reservas/delete/${id}/${experimentoid}`);
 
       setAlert(true);
       setAlertMsg('Experimento Apagado com sucesso!');
@@ -420,7 +420,7 @@ const UserProfileExperimentoAdd = props => {
     // Function for handling remove action
     try {
       setLoading(true);
-      const response = await del(`/experimento/delete/${experimentoId}`);
+      const response = await del(`/api/experimento/delete/${experimentoId}`);
 
       setAlert(true);
       setAlertMsg('Disciplina Apagada com sucesso!');

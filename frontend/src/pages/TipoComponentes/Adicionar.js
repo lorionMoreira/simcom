@@ -293,7 +293,7 @@ const Adicionar = (props) => {
         console.log(`Edit clicked for id ${id}`);
     
         try {
-          const response = await put(`/tipocomponente/update/${id}`, {
+          const response = await put(`/api/tipocomponente/update/${id}`, {
             nome: values.nome,
             especificacao: values.especificacao,
             valor: values.valor,

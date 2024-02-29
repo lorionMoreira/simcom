@@ -120,7 +120,7 @@ const Componentes = props => {
         console.log(`Edit clicked for id ${id}`);
     
         try {
-          const response = await put(`/disciplinas/update/${id}`, {
+          const response = await put(`/api/disciplinas/update/${id}`, {
             nome: values.nome.trimStart()
           });
     
@@ -202,7 +202,7 @@ const Componentes = props => {
     // Function for handling remove action
     try {
       setLoading(true);
-      const response = await del(`/disciplinas/delete/${id}`);
+      const response = await del(`/api/disciplinas/delete/${id}`);
 
       setAlert(true);
       setAlertMsg('Disciplina Apagada com sucesso!');

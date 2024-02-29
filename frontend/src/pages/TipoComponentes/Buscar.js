@@ -146,7 +146,7 @@ const handleInputSearch = async (buscaString) => {
     // Function for handling remove action
     try {
       setLoading(true);
-      const response = await del(`/tipocomponente/delete/${tipocomponenteId}`);
+      const response = await del(`/api/tipocomponente/delete/${tipocomponenteId}`);
 
       setAlert(true);
       setAlertMsg('Experimento Apagado com sucesso!');

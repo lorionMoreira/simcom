@@ -126,7 +126,7 @@ const validationEdit = useFormik({
     const handleSubmissionEdit = async (id) => {
       try {
         setLoading(true);
-        const response = await put(`/clientes/${id}`, {
+        const response = await put(`/api/clientes/${id}`, {
           nome: values.nome,
           email: values.email,
           senha: values.senha ? values.senha : '',
@@ -192,6 +192,7 @@ const validationSave = useFormik({
         setAlert(true)
         setAlertMsg('A operação foi concluída com sucesso!');
         setcolorAlert('success');
+        setIsRight2(!isRight2)
 
       } catch (error) {
         setLoading(false);
@@ -211,7 +212,7 @@ const validationSave = useFormik({
 const removeUser = async (id) => {
   try {
     setLoading(true);
-    const response = await del(`/clientes/delete/${id}`);
+    const response = await del(`/api/clientes/delete/${id}`);
     setLoading(false);
     setAlert(true);
     setAlertMsg('Usuário removido com sucesso!');
@@ -221,7 +222,8 @@ const removeUser = async (id) => {
 
     fetchUsers(currentPage);*/
   } catch (error) {
-    //setError(error);
+    setAlertMsg('Erro ao remover o usuario! Usuário com informações não podem ser removidos!');
+    setcolorAlert('danger');
 
   }
 }
@@ -302,7 +304,7 @@ const handleRemove = async (id) => {
   // Function for handling remove action
   try {
     setLoading(true);
-    const response = await del(`/disciplinas/delete/${id}`);
+    const response = await del(`/api/disciplinas/delete/${id}`);
 
     setAlert(true);
     setAlertMsg('Disciplina Apagada com sucesso');

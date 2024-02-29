@@ -234,7 +234,7 @@ const EcommerceCheckout = (props) => {
         Header: 'Valor',
         Cell: ({ row }) => (
           <div className="d-flex justify-content-center">
-            {row.original?.tipoComponente.valor} {row.original?.tipoComponente.unidadeId.nome}
+ {row.original?.tipoComponente.valor} {row.original?.tipoComponente.unidadeId.nome !== 'ADIMENSIONAL' ? row.original?.tipoComponente.unidadeId.nome : ''}
           </div>
         ),
       },

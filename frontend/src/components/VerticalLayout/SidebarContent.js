@@ -16,8 +16,9 @@ import { withTranslation } from "react-i18next";
 
 const SidebarContent = props => {
 
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
 
-  
   //const ref = useRef();
 
   const { demoData } = useSelector(state => ({
@@ -176,30 +177,27 @@ const SidebarContent = props => {
           </li>
           */}
           <li>
-            <NavLink to="/#" style={{ color: '#556EE6'}}>
+            <a  style={{ color: '#556EE6', cursor: 'default'}}>
               <i className="bx bxs-package" style={{ color: '#556EE6'}}></i>
               <span>{props.t("Componentes")}</span>
-            </NavLink>
+            </a>
             <ul className="sub-menu">
               <li>
                 <NavLink to="/componentes/buscar"
-                onClick={() => handleSetActiveLink('buscar')}
-                style={{ color: activeLink === 'buscar' ? '#556EE6' : 'inherit' }}
+                style={{ color: isActive('/componentes/buscar') ? '#556EE6' : 'inherit' }}
                 >{props.t("Buscar")}</NavLink>
               </li>
               {isAdmin &&              
               <li>
                 <NavLink to="/componentes/adicionar"
-                onClick={() => handleSetActiveLink('adicionar')}
-                style={{ color: activeLink === 'adicionar' ? '#556EE6' : 'inherit' }}
+                style={{ color: isActive('/componentes/adicionar') ? '#556EE6' : 'inherit' }}
                  >{props.t("Adicionar")}</NavLink>
               </li>
               }
 
               <li>
                 <NavLink to="/componentes/solicitar" 
-                onClick={() => handleSetActiveLink('solicitar')}
-                style={{ color: activeLink === 'solicitar' ? '#556EE6' : 'inherit' }}
+                style={{ color: isActive('/componentes/solicitar') ? '#556EE6' : 'inherit' }}
                 >{props.t("Saída")}</NavLink>
               </li>
 
@@ -222,30 +220,28 @@ const SidebarContent = props => {
           */}
 
           <li>
-            <NavLink to="/#" style={{ color: '#556EE6'}}>
+            <a  style={{ color: '#556EE6', cursor: 'default'}}>
               <i className="bx  bx-book-open" style={{ color: '#556EE6'}}></i>
               <span>{props.t("Disciplina")}</span>
-            </NavLink>
+            </a>
             <ul className="sub-menu">
               <li>
                 <NavLink to="/disciplinas/adicionar"
-                onClick={() => handleSetActiveLink('dadicionar')}
-                style={{ color: activeLink === 'dadicionar' ? '#556EE6' : 'inherit' }}
+                style={{ color: isActive('/disciplinas/adicionar') ? '#556EE6' : 'inherit' }}
                 >{props.t("Adicionar")}</NavLink>
               </li>
             </ul>
           </li>
           {isAdmin && 
             <li>
-              <NavLink to="/#" style={{ color: '#556EE6'}}>
+              <a  style={{ color: '#556EE6', cursor: 'default'}}>
                 <i className="bx bx-user" style={{ color: '#556EE6'}}></i>
                 <span>{props.t("Usuários")}</span>
-              </NavLink>
+              </a>
               <ul className="sub-menu">
                 <li>
                   <NavLink to="/usuarios/adicionar"
-                  onClick={() => handleSetActiveLink('uadicionar')}
-                  style={{ color: activeLink === 'uadicionar' ? '#556EE6' : 'inherit' }}
+                  style={{ color: isActive('/usuarios/adicionar') ? '#556EE6' : 'inherit' }}
                   >{props.t("Gerenciar")}</NavLink>
                 </li>
               </ul>

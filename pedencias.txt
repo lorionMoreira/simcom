@@ -1,26 +1,26 @@
-Trocar o LOGO do sistema para SisCOM
-Rever Menu:
-Buscar: busca um componente da lista
-Valor de componente precisar ser um texto - caso não seja digitada a unidade campo será admensional
-TRacar submit por Salvar
+Trocar o LOGO do sistema para SisCOM 
+Rever Menu: -FEITO
+Buscar: busca um componente da lista -nao entendi
+Valor de componente precisar ser um texto - caso não seja digitada a unidade campo será admensional-FEITO
+TRacar submit por Salvar-FEITO
 
 
 Em adicionar retirar a coluna Acões e selecionar clicando em cima da linha do testo
 
-Retirar o botão configuração do Ativo
-Ao adicionar um novo componente retornar a tela passo 1
+Retirar o botão configuração do Ativo -FEITO
+Ao adicionar um novo componente retornar a tela passo 1 - fiz para retornar para buscar 
 
 [Criar um campo localização além da observação]  são 3 localização
 
-O Menu tem que ser fixo - sem ficar baixando, rever as palavras usadas, tais como Ativos, Subnit, SIMCOM
+O Menu tem que ser fixo - sem ficar baixando, rever as palavras usadas, tais como Ativos, Subnit, SIMCOM -Feito
 
-Tocar empréstimo por Emtrega.
+Tocar empréstimo por Emtrega. - coloquei saída
 
-Trocar Ativo por componentes, e retirar componentes
+Trocar Ativo por componentes, e retirar componentes - Feito
 
-Usuário não funciona
+Usuário não funciona - Corrigido
 
-As Componentes e Disciplina e Usuário, não devem ser clicavéis
+As Componentes e Disciplina e Usuário, não devem ser clicavéis - Feito
 
 Criar botão botão de nova disciplina, ao invéis do botão em baixo.
 Os códigos das disciplinas são editáveis SMP ANA7
