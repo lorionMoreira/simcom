@@ -14,15 +14,29 @@ public class DisciplinaDTO implements Serializable {
     @NotEmpty(message = "O nome deve ser preenchido")
     private String nome;
 
+	@NotEmpty(message = "O nome deve ser preenchido")
+	private String orderid;
+
+
 	public DisciplinaDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public DisciplinaDTO(Integer id, @NotEmpty(message = "O nome deve ser preenchido") String nome) {
-		super();
+
+
+	public DisciplinaDTO(Integer id, String nome, String orderid) {
 		this.id = id;
 		this.nome = nome;
+		this.orderid = orderid;
+	}
+
+	public String getOrderid() {
+		return orderid;
+	}
+
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
 	}
 
 	public Integer getId() {

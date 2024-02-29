@@ -23,6 +23,9 @@ public class Disciplina implements Serializable{
 
 		@NotEmpty(message="Preenchimento obrigatório")
 	    private String nome;
+
+		@NotEmpty(message="Preenchimento obrigatório")
+		private String orderid;
 	    
 	    @JsonIgnore
 	    @OneToMany(mappedBy = "disciplinaId")
@@ -34,15 +37,24 @@ public class Disciplina implements Serializable{
 	    	super();
 	    }
 
-	    public Disciplina(Integer id, String nome) {
+	    public Disciplina(Integer id, String nome, String orderid) {
 			super();
 			this.id = id;
 			this.nome = nome;
+			this.orderid = orderid;
 		}
 
 		// Getters and Setters
 
-	    public Integer getId() {
+	public String getOrderid() {
+		return orderid;
+	}
+
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
+	}
+
+	public Integer getId() {
 	        return id;
 	    }
 

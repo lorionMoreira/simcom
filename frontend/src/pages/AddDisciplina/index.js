@@ -33,7 +33,7 @@ const Componentes = props => {
     () => [
       {
         Header: 'Código',
-        accessor: 'id',
+        accessor: 'orderid',
       },
       {
         Header: 'Nome',
@@ -273,23 +273,16 @@ const Componentes = props => {
 
           
             <Card className="p-3">
-            <Alert color={colorAlert} isOpen={alert} toggle={() => {
-                setAlert(false)
-              }}>
-                {alertMsg}
-            </Alert>
+              <Alert color={colorAlert} isOpen={alert} toggle={() => {
+                  setAlert(false)
+                }}>
+                  {alertMsg}
+              </Alert>
               <CardBody>
                   <CardTitle>Disciplinas cadastradas</CardTitle>
                   <CardSubtitle className={`font-14 text-muted ${styles.myButton  } `}>
                     Abaixo contém a lista de disciplinas cadastradas
-                    <button
-                    onClick={t_col5}
-                    className="btn btn-primary mo-mb-2"
-                    type="button"
-                    style={{ cursor: "pointer" }}
-                  >
-                     <i className={`${col5 ? 'bx bx-hide' :'bx bx-show' }`}></i>
-                  </button>
+
                   </CardSubtitle>
  
                 </CardBody>
@@ -300,66 +293,13 @@ const Componentes = props => {
                       className="custom-header-css"
                       handleInputSearch={handleInputSearch}
                       onPageChange={handlePageChange}
+                      showButtonLink={true}
+                      buttonLink="/disciplinas/adicionar2"
+                      buttonText="Nova Disciplina"
                   />
                 </Collapse>
                 <Pagination  key={loading} currentPage={currentPage+1}
                  totalPages={totalRows} onPageChange={handlePageChange} />
-            </Card>
-
-            <Card className="p-3">
-            <div id="liveAlertPlaceholder">
-              <Alert isOpen={show} toggle={() => {
-                setShow(false)
-              }}>
-                Nice, you triggered this alert message!
-              </Alert>
-            </div>
-            <div id="liveAlertPlaceholder">
-              <Alert color="danger" isOpen={showBad} toggle={() => {
-                setShowBad(false)
-              }}>
-                Erro de servidor! Por favor, contate o suporte.
-              </Alert>
-            </div>
-            <CardBody>
-                  <CardTitle>Adicionar disciplina</CardTitle>
-                  <CardSubtitle className="font-14 text-muted">
-                    Use o campo abaixo para adicionar uma disciplina ao sistema.
-                  </CardSubtitle>
-                  <Form
-                      className="form-horizontal"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
-                      }}
-                    >
-                    <div className="mb-3">
-                      <Label className="form-label">Nome</Label>
-                      <Input
-                        name="nome"
-                        className="form-control"
-                        placeholder="Digite o nome da disciplina"
-                        type="nome"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.nome || ""}
-                        invalid={
-                          validation.touched.nome && validation.errors.nome ? true : false
-                        }
-                      />
-                      {validation.touched.nome && validation.errors.nome ? (
-                        <FormFeedback type="invalid">{validation.errors.nome}</FormFeedback>
-                      ) : null}
-                    </div>
-                    <div className="d-flex justify-content-end">
-                      <Button color="primary" type="submit">
-                        Submeter formulário
-                      </Button>
-                    </div>
-
-                    </Form>
-            </CardBody>
             </Card>
           </Container>
       </div>

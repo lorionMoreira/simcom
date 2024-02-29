@@ -29,6 +29,7 @@ import TipoComponenteBuscar from "../pages/TipoComponentes/Buscar"
 import TipoComponenteAdicionar from "../pages/TipoComponentes/Adicionar"
 //disciplinas
 import AddDisciplina from "pages/AddDisciplina/index"
+import AddDisciplina2 from "pages/AddDisciplina/add"
 import Usuarios from "pages/Usuarios/index"
 // not found 
 import NotFound from "pages/NotFound/pages-404"
@@ -47,6 +48,7 @@ const authProtectedRoutes = [
   { path: "/tipocomponente/adicionar/:tipoComponenteId", component: <TipoComponenteAdicionar/> },
   //disciplinas
   { path: "/disciplinas/adicionar", component: <AddDisciplina/> },
+  { path: "/disciplinas/adicionar2", component: <AddDisciplina2/> },
   // experimento
   { path: "/experimentoadd/:experimentoId", component: <ExperimentoAdd /> },
   { path: "/experimentoaddConf/:experimentoId", component: <ExperimentoAddConfirm /> },
