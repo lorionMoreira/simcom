@@ -58,6 +58,17 @@ const IncluirDisciplina = props => {
     onGetUserProfile();
   }, [onGetUserProfile]);
 
+  useEffect(() => {
+    if (loading) {
+      document.body.style.cursor = 'wait';
+    } else {
+      document.body.style.cursor = 'default';
+    }
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  }, [loading]);
+
   const columns = useMemo(
     () => [
 

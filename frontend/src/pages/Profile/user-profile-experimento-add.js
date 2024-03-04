@@ -120,6 +120,7 @@ const UserProfileExperimentoAdd = props => {
     onSubmit: (values) => {
       // table experimento
       const handleSubmission = async () => {
+        setLoading(true);
         try {
           const response = await post(`/api/experimento/salvar/${disciplinaId}`, {
             nome: values.nome.trimStart(),
@@ -138,17 +139,18 @@ const UserProfileExperimentoAdd = props => {
           });
 
           setIsEditing(false);
-
+          setLoading(false);
         } catch (error) {
           console.log(error);
           setShowBad(true);
+          setLoading(false);
         }
       };
       //table experimento
       const handleUpdate = async (experimentoId) => {
         // Function for handling edit action
         console.log(`Edit clicked for experimentoId ${experimentoId}`);
-    
+        setLoading(true);
         try {
           console.log(values)
           const response = await put(`/api/experimento/update/${experimentoId}`, {
@@ -170,10 +172,11 @@ const UserProfileExperimentoAdd = props => {
           });
           
           setIsEditing(false);
-    
+          setLoading(false);
         } catch (error) {
           console.log(error);
           setShowBad(true);
+          setLoading(false);
         }
     
       };
@@ -218,7 +221,7 @@ const UserProfileExperimentoAdd = props => {
   const handleEdit = async (experimentoId) => {
     // Function for handling edit action
     console.log(`Edit clicked for id ${experimentoId}`);
-
+    setLoading(true); 
     try {
       const response = await get(`/api/experimento/mydisciplinas/findbyid/${experimentoId}`);
       
@@ -231,8 +234,9 @@ const UserProfileExperimentoAdd = props => {
       });
 
       setIsEditing(true);
-
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error);
       setAlert(true);
       setAlertMsg('Ocorreu um erro inesperado. Tente novamente mais tarde.');
@@ -327,6 +331,19 @@ const UserProfileExperimentoAdd = props => {
   useEffect(() => {
     fetchUsers(0);
   }, []);
+
+  useEffect(() => {
+    if (loading) {
+      document.body.style.cursor = 'wait';
+    } else {
+      document.body.style.cursor = 'default';
+    }
+  
+    // Clean up function to reset the cursor when the component unmounts
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  }, [loading]);
 
   const t_col5 = () => {
     setcol5(!col5);

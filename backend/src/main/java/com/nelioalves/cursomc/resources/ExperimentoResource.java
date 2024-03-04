@@ -45,9 +45,7 @@ public class ExperimentoResource {
     @Autowired
     private DisciplinaService dservice;
     
-    
 
-    
 	@RequestMapping(value = "/mydisciplinas/findbyid/{experimentoId}", method = RequestMethod.GET)
 	public ResponseEntity<Experimento> find(@PathVariable Integer experimentoId) {
 		
@@ -106,7 +104,7 @@ public class ExperimentoResource {
 
 	}
 	
-	@PreAuthorize("hasAnyRole('ADMIN')")
+
 	@RequestMapping(value = {"/delete/{id}"}, method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		

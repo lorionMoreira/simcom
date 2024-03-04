@@ -22,19 +22,19 @@ Usuário não funciona - Corrigido
 
 As Componentes e Disciplina e Usuário, não devem ser clicavéis - Feito
 
-Criar botão botão de nova disciplina, ao invéis do botão em baixo.
-Os códigos das disciplinas são editáveis SMP ANA7
-Colocar os nomes das disciplina em ordem alphabética
+Criar botão botão de nova disciplina, ao invéis do botão em baixo.- Feito
+Os códigos das disciplinas são editáveis SMP ANA7- Feito
+Colocar os nomes das disciplina em ordem alphabética- Feito
 
-No login professor trocar empréstimo por solicitação ainda por desenvolver
+No login professor trocar empréstimo por solicitação ainda por desenvolver - ver
 
-No menu da esquerda fica  a adição da prática com a vinculação de disciplina
+No menu da esquerda fica  a adição da prática com a vinculação de disciplina- Feito
 
-Usar Salvar nos botões
+Usar Salvar nos botões- Feito
 
-No Menu, Na opçãp praticas, deve-se já listar todos os meus experimentos
+No Menu, Na opçãp praticas, deve-se já listar todos os meus experimentos- Feito
 
-Na lista experimentos deve uma coluna acão que solicita os componentes, está solicitação gera um para o administrador
+Na lista experimentos deve uma coluna acão que solicita os componentes, está solicitação gera um para o administrador - ver
 
 
 

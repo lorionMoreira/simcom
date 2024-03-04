@@ -10,11 +10,6 @@ import {
   CardBody,
   CardTitle,
   CardSubtitle,
-  UncontrolledAlert,  
-  Form,
-  Input,
-  FormFeedback, 
-  Label 
 } from "reactstrap";
 //Import Breadcrumb
 import { del, get, post, put } from "../../helpers/api_helper";
@@ -299,6 +294,19 @@ const Componentes = props => {
   const handlePageChange = page => {
 		fetchUsers(page-1);
 	};
+
+  useEffect(() => {
+    if (loading) {
+      document.body.style.cursor = 'wait';
+    } else {
+      document.body.style.cursor = 'default';
+    }
+  
+    // Clean up function to reset the cursor when the component unmounts
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  }, [loading]);
 
   return (
     <React.Fragment>

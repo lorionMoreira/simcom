@@ -327,6 +327,7 @@ const UserProfileExperimentoAdd = props => {
       setLoading1(false);
       //setPaginationKey(Date.now()); 
       setCurrentPage1(response.number)
+      console.log(currentPage1)
      
     } catch (error) {
       //setError(error);
@@ -358,6 +359,18 @@ const UserProfileExperimentoAdd = props => {
       console.log(error)
     }
   };
+
+  useEffect(() => {
+    if (loading1 || loading2) {
+      document.body.style.cursor = 'wait';
+    } else {
+      document.body.style.cursor = 'default';
+    }
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  }, [loading1,loading2]);
+
   // get one experimento to uodate
   const handleEdit = async (experimentoId) => {
     // Function for handling edit action
@@ -402,10 +415,20 @@ const UserProfileExperimentoAdd = props => {
       fetchUsers1(0);
 
       setIsEditing(false);
-
+      setLoading1(false);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     } catch (error) {
       //setError(error);
-      setLoading(false);
+      setLoading1(false);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
       setAlert(true);
       setAlertMsg('Error ao apagar a disciplina');
       setcolorAlert('danger');
@@ -481,8 +504,12 @@ const UserProfileExperimentoAdd = props => {
   const t_col5 = () => {
     setcol5(!col5);
   };
-  const handlePageChange = page => {
-		fetchUsers(page-1);
+
+  const handlePageChange1 = page => {
+		fetchUsers1(page-1);
+	};
+  const handlePageChange2 = page => {
+		fetchUsers2(page-1);
 	};
 
   return (
@@ -523,36 +550,36 @@ const UserProfileExperimentoAdd = props => {
                       data={data1}
                       className="custom-header-css"
                       handleInputSearch={handleInputSearch}
-                      onPageChange={handlePageChange}
+                      onPageChange={handlePageChange1}
                       
                   />
                 </Collapse>
-                <Pagination  key={loading1} currentPage1={currentPage1+1}
-                 totalPages={totalRows1} onPageChange={handlePageChange} />
+                <Pagination  key={loading1} currentPage={currentPage1+1}
+                 totalPages={totalRows1} onPageChange={handlePageChange1} />
             </Card>
 
             <Card className="p-3">
 
 
             <CardBody>
-                  <CardTitle>{isEditing ? 'Editar Experimento' : 'Adicionar Componentes'}</CardTitle>
-                  <CardSubtitle className="font-14 text-muted">
-                    Use o campo abaixo para adicionar uma disciplina ao sistema.
-                  </CardSubtitle>
+                <CardTitle>{isEditing ? 'Editar Experimento' : 'Adicionar Componentes'}</CardTitle>
+                <CardSubtitle className="font-14 text-muted">
+                  Use o campo abaixo para adicionar uma disciplina ao sistema.
+                </CardSubtitle>
 
-                                   <Collapse isOpen={col5}>
+                <Collapse isOpen={col5}>
                   <TableContainer
                       columns={columns2}
                       data={data2}
                       className="custom-header-css"
                       handleInputSearch={handleInputSearch}
-                      onPageChange={handlePageChange}
+                      onPageChange={handlePageChange2}
                       
                   />
                 </Collapse>
 
-                <Pagination  key={loading2} currentPage2={currentPage2+1}
-                 totalPages={totalRows2} onPageChange={handlePageChange} />
+                <Pagination  key={loading2} currentPage={currentPage2+1}
+                 totalPages={totalRows2} onPageChange={handlePageChange2} />
 
                 <div className="d-flex justify-content-end mt-3 ">
                 <Button color="secondary" type="submit" className="me-2" onClick={handleClear}>

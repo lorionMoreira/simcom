@@ -150,28 +150,43 @@ const handleInputSearch = async (buscaString) => {
 		fetchUsers(page-1);
 	};
 
+  useEffect(() => {
+    if (loading) {
+      document.body.style.cursor = 'wait';
+    } else {
+      document.body.style.cursor = 'default';
+    }
+  
+    // Clean up function to reset the cursor when the component unmounts
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  }, [loading]);
+
   return (
     <React.Fragment>
-      <div className="page-content">
-        <Container fluid>
-          {/* Render Breadcrumb */}
-          <Breadcrumbs
-            title={props.t("Componentes")}
-            breadcrumbItem={props.t("Buscar")}
-          />
-              <Card className="p-3">
-                <TableContainer
-                    columns={columns}
-                    data={data}
-                    className="custom-header-css"
-                    handleInputSearch={handleInputSearch}
-                    onPageChange={handlePageChange}
-                />
-                <Pagination  key={loading} currentPage={currentPage+1}
-                 totalPages={totalRows} onPageChange={handlePageChange} />
-              </Card>
+
+        <div className="page-content">
+          <Container fluid>
+            {/* Render Breadcrumb */}
+            <Breadcrumbs
+              title={props.t("Componentes")}
+              breadcrumbItem={props.t("Buscar")}
+            />
+            <Card className="p-3">
+              <TableContainer
+                  columns={columns}
+                  data={data}
+                  className="custom-header-css"
+                  handleInputSearch={handleInputSearch}
+                  onPageChange={handlePageChange}
+              />
+              <Pagination  key={loading} currentPage={currentPage+1}
+              totalPages={totalRows} onPageChange={handlePageChange} />
+            </Card>
           </Container>
-          </div>
+        </div>
+      
     </React.Fragment>
   );
 };

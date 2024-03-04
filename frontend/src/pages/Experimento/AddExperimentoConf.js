@@ -108,19 +108,17 @@ const AddExperimentoConf = () => {
                     <Table className="table align-middle mb-0 table-nowrap">
                       <thead className="table-light">
                         <tr>
-                          <th>Id</th>
+                          
                           <th>Nome</th>
                           <th>Especificação</th>
                           <th>Quantidade</th>
-                          
+                          <th>Ação</th>
                         </tr>
                       </thead>
                       <tbody>
                         {productList.map(product => (
                           <tr key={product.id}>
-                            <td>
-                            {product.id}
-                            </td>
+
                             <td>
                               <h5 className="font-size-14 text-truncate">
                                 <Link
@@ -186,11 +184,11 @@ const AddExperimentoConf = () => {
                   <Row className="mt-4">
                     <Col sm="6">
                       <Link
-                        to={`/experimentoadd/`}
+                        
                         className="btn btn-secondary"
+                        onClick={() => navigate(-1) } style={{ textDecoration: 'none' }}
                       >
-                        <i className="mdi mdi-arrow-left me-1" /> Continue
-                        Shopping{" "}
+                        <i className="mdi mdi-arrow-left me-1" /> Voltar{" "}
                       </Link>
                     </Col>
                     <Col sm="6">

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, {useState, useEffect } from "react";
 
 import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
 
@@ -24,13 +24,11 @@ import { loginUser, socialLogin } from "../../store/actions";
 import profile from "assets/images/profile-img.png";
 import logo from "assets/images/logo.svg";
 
-//Import config
-import { facebook, google } from "../../config";
 
 const Login = props => {
-
+  const [loading, setLoading] = useState(false);
   //meta title
-  document.title = "Login | Skote - React Admin & Dashboard Template";
+  document.title = "Login | Siscom - Sistema integrado de componentes";
 
   const dispatch = useDispatch();
 
@@ -48,7 +46,9 @@ const Login = props => {
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: (values) => {
+      setLoading(true);
       dispatch(loginUser(values, props.router.navigate));
+      setLoading(false);
     }
   });
 
@@ -56,38 +56,20 @@ const Login = props => {
     error: state.Login.error,
   }));
 
-  const signIn = (res, type) => {
-    if (type === "google" && res) {
-      const postData = {
-        name: res.profileObj.name,
-        email: res.profileObj.email,
-        token: res.tokenObj.access_token,
-        idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, props.router.navigate, type));
-    } else if (type === "facebook" && res) {
-      const postData = {
-        name: res.name,
-        email: res.email,
-        token: res.accessToken,
-        idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, props.router.navigate, type));
+
+
+  useEffect(() => {
+    if (loading) {
+      document.body.style.cursor = 'wait';
+    } else {
+      document.body.style.cursor = 'default';
     }
-  };
-
-  //handleGoogleLoginResponse
-  const googleResponse = response => {
-    signIn(response, "google");
-  };
-
-  //handleTwitterLoginResponse
-  // const twitterResponse = e => {}
-
-  //handleFacebookLoginResponse
-  const facebookResponse = response => {
-    signIn(response, "facebook");
-  };
+  
+    // Clean up function to reset the cursor when the component unmounts
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  }, [loading]);
 
   return (
     <React.Fragment>
@@ -141,7 +123,7 @@ const Login = props => {
                       {error ? <Alert color="danger">{error}</Alert> : null}
 
                       <div className="mb-3">
-                        <Label className="form-label">Email</Label>
+                        <Label className="form-label">E-mail</Label>
                         <Input
                           name="email"
                           className="form-control"
@@ -160,7 +142,7 @@ const Login = props => {
                       </div>
 
                       <div className="mb-3">
-                        <Label className="form-label">Password</Label>
+                        <Label className="form-label">Senha</Label>
                         <Input
                           name="password"
                           value={validation.values.password || ""}
@@ -196,7 +178,7 @@ const Login = props => {
                           className="btn btn-primary btn-block"
                           type="submit"
                         >
-                          Log In
+                          Entrar
                         </button>
                       </div>
 
@@ -216,11 +198,14 @@ const Login = props => {
               </Card>
               <div className="mt-5 text-center">
                 <p>
-                  Não tem uma conta ?{" "}
+                  {/*
+                                    Não tem uma conta ?{" "}
                   <Link to="/register" className="fw-medium text-primary">
                     {" "}
                     Signup now{" "}
                   </Link>{" "}
+                  */}
+
                 </p>
 
               </div>

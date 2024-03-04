@@ -132,7 +132,7 @@ const UserProfileExperimentoAdd = props => {
     onSubmit: (values) => {
       // table experimento
       const handleSubmission = async () => {
-
+        setLoading(true); 
         try {
           const response = await post(`/api/experimento/salvar/${values.selectOption}`, {
             nome: values.nome.trimStart(),
@@ -151,17 +151,28 @@ const UserProfileExperimentoAdd = props => {
           });
 
           setIsEditing(false);
-
+          setLoading(false);
+          window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+          });
         } catch (error) {
           console.log(error);
           setShowBad(true);
+          setLoading(false);
+          window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+          });
         }
       };
       //table experimento
       const handleUpdate = async (experimentoId) => {
         // Function for handling edit action
         console.log(`Edit clicked for experimentoId ${experimentoId}`);
-    
+        setLoading(true);
         try {
           console.log(values)
           const response = await put(`/api/experimento/update/${experimentoId}`, {
@@ -183,10 +194,21 @@ const UserProfileExperimentoAdd = props => {
           });
           
           setIsEditing(false);
-    
+          setLoading(false);
+          window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+          });
         } catch (error) {
           console.log(error);
           setShowBad(true);
+          setLoading(false);
+          window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+          });
         }
     
       };
@@ -202,7 +224,7 @@ const UserProfileExperimentoAdd = props => {
   });
   // fetch users
   const fetchUsers = async (page) => {
-
+    setLoading(true); 
     try {
       setLoading(true);
       const response = await get('/api/vinculos/mydisciplinas/experimentos/findexp', {
@@ -250,7 +272,7 @@ const UserProfileExperimentoAdd = props => {
   const handleEdit = async (experimentoId,disciplinaId,userId) => {
     // Function for handling edit action
     console.log(`Edit clicked for id ${experimentoId}`);
-
+    setLoading(true);
     try {
       const response = await get(`/api/vinculos/mydisciplinas/experimentos/findbyprof/${experimentoId}/${disciplinaId}/${userId}`);
       console.log('response22')
@@ -264,12 +286,13 @@ const UserProfileExperimentoAdd = props => {
       });
 
       setIsEditing(true);
-
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setAlert(true);
       setAlertMsg('Ocorreu um erro inesperado. Tente novamente mais tarde.');
       setcolorAlert('danger');
+      setLoading(false);
     }
 
   };
@@ -278,20 +301,31 @@ const UserProfileExperimentoAdd = props => {
 
   const handleRemove = async (experimentoId) => {
     // Function for handling remove action
+    
     try {
       setLoading(true);
       const response = await del(`/api/experimento/delete/${experimentoId}`);
 
-      setAlert(true);
+      
       setAlertMsg('Experimento Apagado com sucesso!');
       setcolorAlert('success');
       fetchUsers(currentPage);
 
       setIsEditing(false);
-
+      setLoading(false);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     } catch (error) {
       //setError(error);
       setLoading(false);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
       setAlert(true);
       setAlertMsg('Error ao apagar a disciplina');
       setcolorAlert('danger');
@@ -341,6 +375,17 @@ const UserProfileExperimentoAdd = props => {
     fetchUsers(0);
     fetchDisciplinas();
   }, []);
+
+  useEffect(() => {
+    if (loading) {
+      document.body.style.cursor = 'wait';
+    } else {
+      document.body.style.cursor = 'default';
+    }
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  }, [loading]);
 
   const t_col5 = () => {
     setcol5(!col5);
