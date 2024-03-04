@@ -3,6 +3,7 @@ import styles from "./style.module.css";
 import {
   Button,
   Container,
+  Col,
   Card,
   Alert,
   Collapse,
@@ -20,7 +21,7 @@ import { del, get, post, put } from "../../helpers/api_helper";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import TableContainer from '../../components/Common/TableContainerNoFilter';
 import Pagination from '../../components/Common/Pagination';
-
+import {useNavigate } from "react-router-dom";
 // Formik validation
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -28,7 +29,7 @@ import { useFormik } from "formik";
 //i18n
 import { withTranslation } from "react-i18next";
 const Componentes = props => {
-
+  const navigate = useNavigate();
   const columns = useMemo(
     () => [
       {
@@ -306,7 +307,8 @@ const Componentes = props => {
           {/* Render Breadcrumb */}
           <Breadcrumbs
             title={props.t("Disciplinas")}
-            breadcrumbItem={props.t("Adicionar")}
+            breadcrumbItem={props.t("Gerenciar")}
+            breadcrumbItem2={props.t("Adicionar")}
           />
 
           
@@ -317,9 +319,9 @@ const Componentes = props => {
                 {alertMsg}
             </Alert>
               <CardBody>
-                  <CardTitle>Adicionar Nova Disciplinas </CardTitle>
+                  <CardTitle>Gerenciar minhas disciplinas </CardTitle>
                   <CardSubtitle className={`font-14 text-muted ${styles.myButton  } `}>
-                    Abaixo contém a lista de disciplinas registradas no sistema.
+                    Abaixo contém a lista de disciplinas vinculadas ao seu perfil.
                     <button
                     onClick={t_col5}
                     className="btn btn-primary mo-mb-2"
@@ -344,8 +346,16 @@ const Componentes = props => {
                  totalPages={totalRows} onPageChange={handlePageChange} />
             </Card>
 
+          <Col xl="12">
+            <button
+              className="btn mb-3 btn-soft-primary text-muted d-none d-sm-inline-block btn-link"
+              onClick={() => navigate(-1) } style={{ textDecoration: 'none' }}
+            >
+              <i className="mdi mdi-arrow-left me-1" /> Voltar
+            </button>
+          </Col>
+        </Container>
 
-          </Container>
       </div>
     </React.Fragment>
   );

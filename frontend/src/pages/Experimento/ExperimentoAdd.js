@@ -24,7 +24,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import TableContainer from '../../components/Common/TableContainerNoFilter';
 import Pagination from '../../components/Common/Pagination';
 import {useNavigate } from "react-router-dom";
-
+import { useSelector, useDispatch } from "react-redux";
 // Formik validation
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -33,8 +33,15 @@ import { useFormik } from "formik";
 import { withTranslation } from "react-i18next";
 const UserProfileExperimentoAdd = props => {
 
+  const { demoData } = useSelector(state => ({
+    demoData: state.Login.demoData,
+  }));
+  
+  let loggedUserId = demoData.data?.id ;
+
+
   const navigate = useNavigate();
-  const { disciplinaId } = useParams();
+  //const { disciplinaId } = useParams();
 
   const columns = useMemo(
     () => [
@@ -65,7 +72,7 @@ const UserProfileExperimentoAdd = props => {
 
             <a
               className="d-inline-block "
-              onClick={() => handleEdit(row.original?.experimentoId?.id)}//experimentoId
+              onClick={() => handleEdit(row.original?.experimentoId?.id,row.original?.disciplinaId?.id,loggedUserId)}//experimentoId
               title="Editar experimento"
             >
               <i className="bx bx-edit-alt" style={{ fontSize: '24px', color: '#556ee6'  }}></i>
@@ -85,7 +92,7 @@ const UserProfileExperimentoAdd = props => {
         ),
       },
     ],
-    []
+    [loggedUserId]
   );
 
   const [data, setData] = useState([]);
@@ -94,8 +101,11 @@ const UserProfileExperimentoAdd = props => {
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(0);
   const [paginationKey, setPaginationKey] = useState(Date.now());
+  //const [stableUserId, setStableUserId] = useState(null);
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const [disciplinas, setDisciplinas] = useState([]);
 
 
   const [alert, setAlert] = useState(false);
@@ -112,16 +122,19 @@ const UserProfileExperimentoAdd = props => {
     initialValues: {
       id: '',
       nome: '',
+      selectOption: '',
       obs: ''
     },
     validationSchema: Yup.object({
       nome: Yup.string().required("Por favor, digite o nome da disciplina"),
+      selectOption: Yup.string().required("Please select an option")
     }),
     onSubmit: (values) => {
       // table experimento
       const handleSubmission = async () => {
+
         try {
-          const response = await post(`/api/experimento/salvar/${disciplinaId}`, {
+          const response = await post(`/api/experimento/salvar/${values.selectOption}`, {
             nome: values.nome.trimStart(),
             obs: values.obs.trimStart()
           });
@@ -192,11 +205,10 @@ const UserProfileExperimentoAdd = props => {
 
     try {
       setLoading(true);
-      const response = await get('/api/vinculos/mydisciplinas/experimentos/findall', {
+      const response = await get('/api/vinculos/mydisciplinas/experimentos/findexp', {
         params: {
           page: page,
           size: perPage,
-          disciplinaId: disciplinaId
         },
       });
 
@@ -214,20 +226,41 @@ const UserProfileExperimentoAdd = props => {
       console.log(error)
     }
   };
+
+  const fetchDisciplinas = async () => {
+    
+    try {
+      const response = await get('/api/disciplinas/buscar');
+      console.log('craziii')
+      console.log(response)
+
+      const transformedData = response.content.map(item => ({
+        id: item.id,
+        nome: item.nome
+      }));
+
+      setDisciplinas(transformedData);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // get one experimento to uodate
-  const handleEdit = async (experimentoId) => {
+  const handleEdit = async (experimentoId,disciplinaId,userId) => {
     // Function for handling edit action
     console.log(`Edit clicked for id ${experimentoId}`);
 
     try {
-      const response = await get(`/api/experimento/mydisciplinas/findbyid/${experimentoId}`);
-      
-      console.log(response)
+      const response = await get(`/api/vinculos/mydisciplinas/experimentos/findbyprof/${experimentoId}/${disciplinaId}/${userId}`);
+      console.log('response22')
+      let myObject = response.content[0];
 
       validation.setValues({
-        id: response.id,
-        nome: response.nome,
-        obs: response.obs
+        id: myObject.experimentoId.id,
+        nome: myObject.experimentoId.nome,
+        obs: myObject.experimentoId.obs,
+        selectOption: myObject.disciplinaId.id
       });
 
       setIsEditing(true);
@@ -267,27 +300,7 @@ const UserProfileExperimentoAdd = props => {
 
   };
 
-  const handleAdd = async (experimentoId) => {
-    // Function for handling remove action
-    try {
-      setLoading(true);
-      const response = await del(`/api/experimento/delete/${experimentoId}`);
 
-      setAlert(true);
-      setAlertMsg('Disciplina Apagada com sucesso!');
-      setcolorAlert('success');
-      fetchUsers(currentPage);
-
-    } catch (error) {
-      //setError(error);
-      setLoading(false);
-      setAlert(true);
-      setAlertMsg('Error ao apagar a disciplina');
-      setcolorAlert('danger');
-      console.log(error);
-    }
-
-  };
   const handleClearForm = () => {
     validation.resetForm(); // This will reset all form fields and errors
   };
@@ -296,7 +309,7 @@ const UserProfileExperimentoAdd = props => {
     try {
       setLoading(true);
       setCurrentPage(0)
-      const response = await post('/api/disciplinas/buscar',
+      const response = await post('/api/vinculos/mydisciplinas/experimentos/findexp',
       {
         searchRequest: buscaString
       },
@@ -326,6 +339,7 @@ const UserProfileExperimentoAdd = props => {
 
   useEffect(() => {
     fetchUsers(0);
+    fetchDisciplinas();
   }, []);
 
   const t_col5 = () => {
@@ -356,7 +370,7 @@ const UserProfileExperimentoAdd = props => {
               <CardBody>
                   <CardTitle>Experimentos Cadastrados</CardTitle>
                   <CardSubtitle className={`font-14 text-muted ${styles.myButton  } `}>
-                    Abaixo contém a lista de experimentos cadastrados45
+                    Abaixo contém a lista de experimentos cadastrados46
                     <button
                     onClick={t_col5}
                     className="btn btn-primary mo-mb-2"
@@ -413,6 +427,33 @@ const UserProfileExperimentoAdd = props => {
                       <FormFeedback type="invalid">{validation.errors.nome}</FormFeedback>
                     ) : null}
                   </div>
+                  <div className="mb-3">
+                    <Label className="form-label">Disciplina</Label>
+                    <Input
+                      type="select"
+                      name="selectOption"
+                      onChange={validation.handleChange}  
+                      onBlur={validation.handleBlur}
+                      value={validation.values.selectOption || ""}
+                      invalid={
+                        validation.touched.selectOption && validation.errors.selectOption ? true : false
+                      }
+                    >
+                      <option value="">Selecione</option>
+                      {disciplinas.map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.nome}
+                        </option>
+                      ))}
+                      
+                    </Input>
+                    {validation.touched.selectOption && validation.errors.selectOption ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.selectOption}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                  
                   <div className="mb-3">
                     <Label className="form-label">Observação</Label>
                     <Input

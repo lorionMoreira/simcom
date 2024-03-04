@@ -505,7 +505,7 @@ const UserProfileExperimentoAdd = props => {
               <CardBody>
                   <CardTitle>Componentes do experimento</CardTitle>
                   <CardSubtitle className={`font-14 text-muted ${styles.myButton  } `}>
-                    Abaixo contém a lista de experimentos cadastrados
+                    Abaixo contém a lista de experimentos cadastrados2
                     <button
                     onClick={t_col5}
                     className="btn btn-primary mo-mb-2"

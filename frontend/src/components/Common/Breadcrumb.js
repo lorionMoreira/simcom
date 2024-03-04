@@ -17,6 +17,16 @@ const Breadcrumb = props => {
               <BreadcrumbItem active>
                 <Link to="#">{props.breadcrumbItem}</Link>
               </BreadcrumbItem>
+              {props.breadcrumbItem2 && (
+                <BreadcrumbItem>
+                  {props.breadcrumbItem2}
+                </BreadcrumbItem>
+              )}
+              {props.breadcrumbItem3 && (
+                <BreadcrumbItem>
+                  {props.breadcrumbItem3}
+                </BreadcrumbItem>
+              )}
             </ol>
           </div>
         </div>

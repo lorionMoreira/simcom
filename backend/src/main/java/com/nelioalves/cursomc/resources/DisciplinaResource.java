@@ -45,7 +45,7 @@ public class DisciplinaResource {
     @GetMapping("/buscar")
     public ResponseEntity<Page<Disciplina>> getEntitiesWithPagination(
             @RequestParam(value = "page", defaultValue = "0") int pageNumber,
-            @RequestParam(value = "size", defaultValue = "2") int pageSize) {
+            @RequestParam(value = "size", defaultValue = "10000") int pageSize) {
         Page<Disciplina> entities = service.findWithConditionsAndPagination(pageNumber, pageSize);
         return ResponseEntity.ok().body(entities);
     }

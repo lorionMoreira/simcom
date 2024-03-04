@@ -9,6 +9,7 @@ import ProfileExpAdd from "../pages/Profile/user-profile-experimento-add"
 // Experimento
 import ExperimentoAdd from "../pages/Experimento/AddExperimento"
 import ExperimentoAddConfirm from "../pages/Experimento/AddExperimentoConf"
+import ExperimentoAddAll from "../pages/Experimento/ExperimentoAdd"
 
 // Authentication related pages
 import Login from "../pages/Authentication/Login"
@@ -31,6 +32,8 @@ import TipoComponenteAdicionar from "../pages/TipoComponentes/Adicionar"
 import AddDisciplina from "pages/AddDisciplina/index"
 import AddDisciplina2 from "pages/AddDisciplina/add"
 import Usuarios from "pages/Usuarios/index"
+// incluir disciplina
+import IncluirDisciplina from "pages/IncluirDisciplina/IncluirDisciplina"
 // not found 
 import NotFound from "pages/NotFound/pages-404"
 
@@ -49,9 +52,12 @@ const authProtectedRoutes = [
   //disciplinas
   { path: "/disciplinas/adicionar", component: <AddDisciplina/> },
   { path: "/disciplinas/adicionar2", component: <AddDisciplina2/> },
+  // incluirDisciplina
+  {path: "/disciplinas/incluir", component: <IncluirDisciplina/>},
   // experimento
   { path: "/experimentoadd/:experimentoId", component: <ExperimentoAdd /> },
   { path: "/experimentoaddConf/:experimentoId", component: <ExperimentoAddConfirm /> },
+  { path: "/experimentoaddaddall/", component: <ExperimentoAddAll /> },
   //usuarios
   { path: "/usuarios/adicionar", component: <Usuarios/> },
 

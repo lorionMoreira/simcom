@@ -20,7 +20,7 @@ import { del, get, post, put } from "../../helpers/api_helper";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import TableContainer from '../../components/Common/TableContainerNoFilter';
 import Pagination from '../../components/Common/Pagination';
-
+import { useNavigate } from 'react-router-dom';
 // Formik validation
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -28,6 +28,8 @@ import { useFormik } from "formik";
 //i18n
 import { withTranslation } from "react-i18next";
 const Componentes = props => {
+
+  const navigate = useNavigate();
 
   const columns = useMemo(
     () => [
@@ -180,7 +182,7 @@ const Componentes = props => {
   const handleEdit = async (id) => {
     // Function for handling edit action
     console.log(`Edit clicked for id ${id}`);
-
+    /*
     try {
       const response = await get(`/api/disciplinas/findbyid/${id}`);
 
@@ -193,6 +195,8 @@ const Componentes = props => {
       console.log(error);
       setShowBad(true);
     }
+    */
+    navigate(`/disciplinas/adicionar2`, { state: { id } });
 
   };
 

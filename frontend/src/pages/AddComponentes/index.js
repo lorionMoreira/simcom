@@ -592,7 +592,7 @@ const FormWizard = () => {
                                           <option key={option.id} value={option.id}>
                                             {option.nome}
                                           </option>
-                                        ))}
+                                          ))}
                                         </Input>
                                         {validation.touched.unidade && validation.errors.unidade && (
                                           <FormFeedback type="invalid">{validation.errors.unidade}</FormFeedback>

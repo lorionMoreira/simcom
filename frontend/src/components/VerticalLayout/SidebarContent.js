@@ -194,13 +194,13 @@ const SidebarContent = props => {
                  >{props.t("Adicionar")}</NavLink>
               </li>
               }
-
+              {isAdmin &&  
               <li>
                 <NavLink to="/componentes/solicitar" 
                 style={{ color: isActive('/componentes/solicitar') ? '#556EE6' : 'inherit' }}
                 >{props.t("Saída")}</NavLink>
               </li>
-
+              }
             </ul>
           </li>
           {/* 
@@ -225,13 +225,39 @@ const SidebarContent = props => {
               <span>{props.t("Disciplina")}</span>
             </a>
             <ul className="sub-menu">
+            {isAdmin &&
               <li>
                 <NavLink to="/disciplinas/adicionar"
                 style={{ color: isActive('/disciplinas/adicionar') ? '#556EE6' : 'inherit' }}
                 >{props.t("Adicionar")}</NavLink>
               </li>
+            }
+            {!isAdmin &&
+              <li>
+                <NavLink to="/disciplinas/incluir"// /profile/mydisciplina
+                style={{ color: isActive('/disciplinas/incluir') ? '#556EE6' : 'inherit' }}
+                >{props.t("Gerenciar")}</NavLink>
+              </li>
+            }
             </ul>
           </li>
+          {!isAdmin && 
+          <li>
+            <a  style={{ color: '#556EE6', cursor: 'default'}}>
+              <i className="bx  bx-bar-chart-alt-2" style={{ color: '#556EE6'}}></i>
+              <span>{props.t("Experimentos")}</span>
+            </a>
+            <ul className="sub-menu">
+            
+              <li>
+                <NavLink to="/experimentoaddaddall/"// /profile/mydisciplina
+                style={{ color: isActive('/experimentoaddaddall/') ? '#556EE6' : 'inherit' }}
+                >{props.t("Gerenciar")}</NavLink>
+              </li>
+            
+            </ul>
+          </li>
+          }
           {isAdmin && 
             <li>
               <a  style={{ color: '#556EE6', cursor: 'default'}}>

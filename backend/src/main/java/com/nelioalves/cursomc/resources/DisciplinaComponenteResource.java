@@ -80,7 +80,7 @@ public class DisciplinaComponenteResource {
     public ResponseEntity<Page<DisciplinaComponente>> getEntitiesWithConditions(
             @RequestParam(value = "page", defaultValue = "0") int pageNumber,
             @RequestParam(value = "size", defaultValue = "10") int pageSize,
-            @RequestParam(value = "disciplinaId", defaultValue = "10") Integer disciplinaId) {
+            @RequestParam(value = "disciplinaId") Integer disciplinaId) {
     	
     	User user  = clienteservice.findMySelf();
     	
@@ -102,6 +102,19 @@ public class DisciplinaComponenteResource {
         
     }
 
+    @GetMapping("/mydisciplinas/experimentos/findexp")
+    public ResponseEntity<Page<DisciplinaComponente>> getEntitiesWithConditions2(
+            @RequestParam(value = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize
+            ) {
+    	
+    	    User user  = clienteservice.findMySelf();
+    	
+			Page<DisciplinaComponente> entities = service.findMyExperimentosWithPagination3(user.getId() ,pageNumber, pageSize);
+			return ResponseEntity.ok().body(entities);
+        
+    }
+
     @GetMapping("/mydisciplinas/experimentos/findbyprof/{disciplinaId}/{userId}")
     public ResponseEntity<Page<DisciplinaComponente>> getEntitiesWithConditionsbyprof(
             @RequestParam(value = "page", defaultValue = "0") int pageNumber,
@@ -119,6 +132,34 @@ public class DisciplinaComponenteResource {
             Integer myDisciplinaId = disciplinaId;
 
             Page<DisciplinaComponente> entities = service.findMyExperimentosWithPagination(myDisciplinaId, userId ,pageNumber, pageSize);
+            return ResponseEntity.ok().body(entities);
+        }else {
+            String errorMessage = "Unauthorized access. You are not allowed to delete this record.";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // or ResponseEntity.ok().body(Page.empty())
+        }
+
+        // mudar a forma como isso é feito acima;
+
+    }
+
+    @GetMapping("/mydisciplinas/experimentos/findbyprof/{experimentoId}/{disciplinaId}/{userId}")
+    public ResponseEntity<Page<DisciplinaComponente>> getEntitiesWithConditionsbyDisc(
+            @RequestParam(value = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize,
+            @PathVariable Integer experimentoId,
+            @PathVariable Integer disciplinaId,
+            @PathVariable Integer userId) {
+
+        //User user  = clienteservice.findMySelf();
+
+        DisciplinaComponente vinculo = service.findVinculoByDisciplinaId(disciplinaId,userId);
+
+        if (userId == vinculo.getUserId().getId()) {
+
+            // Integer myDisciplinaId = vinculo.getDisciplinaId().getId();
+            Integer myDisciplinaId = disciplinaId;
+
+            Page<DisciplinaComponente> entities = service.findMyExperimentosbyDiscWithPagination(experimentoId,myDisciplinaId, userId ,pageNumber, pageSize);
             return ResponseEntity.ok().body(entities);
         }else {
             String errorMessage = "Unauthorized access. You are not allowed to delete this record.";

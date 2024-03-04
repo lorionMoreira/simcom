@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -38,7 +39,10 @@ public class DisciplinaService {
     
     public Page<Disciplina> findWithConditionsAndPagination(int pageNumber, int pageSize) {
         // Create a PageRequest object with pagination parameters
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+		Sort sort = Sort.by("nome").ascending();
+
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
 
         Page<Disciplina> result = repo.findWitPagination(pageRequest);
 
@@ -69,7 +73,8 @@ public class DisciplinaService {
 		Disciplina newObj = find(obj.getId());
 		
 		newObj.setNome(obj.getNome());
-		
+		newObj.setOrderid(obj.getOrderid());
+
 		return repo.save(newObj);
 	}
 	

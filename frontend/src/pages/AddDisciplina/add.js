@@ -1,5 +1,6 @@
 import React, {  useState,useMemo, useEffect  } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
+
 import styles from "./style.module.css";
 import {
   Button,
@@ -30,6 +31,11 @@ import { useFormik } from "formik";
 import { withTranslation } from "react-i18next";
 const Componentes = props => {
 
+  const location = useLocation();
+  const disciplinaId = location.state?.id || [];
+
+
+
   const navigate = useNavigate();
 
 
@@ -50,24 +56,25 @@ const Componentes = props => {
     initialValues: {
       id: '',
       nome: '',
-      codigo: ''
+      orderid: ''
     },
     validationSchema: Yup.object({
       nome: Yup.string().required("Por favor, digite o nome da disciplina"),
-      codigo: Yup.string().required("Por favor, digite o código da disciplina"),
+      orderid: Yup.string().required("Por favor, digite o código da disciplina"),
     }),
     onSubmit: (values) => {
 
       const handleSubmission = async () => {
         try {
           const response = await post('/api/disciplinas/salvar', {
-            nome: values.nome.trimStart()
+            nome: values.nome.trimStart(),
+            orderid: values.orderid.trimStart()
           });
           
           validation.setValues({
             id: '',
             nome: ' ' ,
-            codigo: ''
+            orderid: ''
           });
 
           navigate('/disciplinas/adicionar');
@@ -85,7 +92,7 @@ const Componentes = props => {
         try {
           const response = await put(`/api/disciplinas/update/${id}`, {
             nome: values.nome.trimStart(),
-            codigo: values.codigo.trimStart()
+            orderid: values.orderid.trimStart()
           });
     
           setAlert(true);
@@ -98,7 +105,7 @@ const Componentes = props => {
           validation.setValues({
             id: '',
             nome: '',
-            codigo: '' 
+            orderid: '' 
           });
 
           navigate('/disciplinas/adicionar');
@@ -116,9 +123,37 @@ const Componentes = props => {
         handleSubmission();
       }
       
-
   }
   });
+
+  const fetchUDisciplina = async (page) => {
+    console.log('entrou')
+console.log(disciplinaId)
+
+    if(typeof disciplinaId === 'number' && Number.isInteger(disciplinaId)){
+
+      try {
+        const response = await get(`/api/disciplinas/findbyid/${disciplinaId}`);
+  
+        validation.setValues({
+          id: response.id,
+          nome: response.nome ,
+          orderid: response.orderid
+        });
+  
+      } catch (error) {
+        console.log(error);
+        setShowBad(true);
+      }
+
+    }
+
+
+  };
+
+  useEffect(() => {
+    fetchUDisciplina();
+  }, [disciplinaId]);
 
   return (
     <React.Fragment>
@@ -180,19 +215,19 @@ const Componentes = props => {
                     <div className="mb-3">
                       <Label className="form-label">Código</Label>
                       <Input
-                        name="codigo"
+                        name="orderid"
                         className="form-control"
-                        placeholder="Digite o codigo da disciplina"
-                        type="codigo"
+                        placeholder="Digite o código da disciplina"
+                        type="text"
                         onChange={validation.handleChange}
                         onBlur={validation.handleBlur}
-                        value={validation.values.codigo || ""}
+                        value={validation.values.orderid || ""}
                         invalid={
-                          validation.touched.codigo && validation.errors.codigo ? true : false
+                          validation.touched.orderid && validation.errors.orderid ? true : false
                         }
                       />
-                      {validation.touched.codigo && validation.errors.codigo ? (
-                        <FormFeedback type="invalid">{validation.errors.codigo}</FormFeedback>
+                      {validation.touched.orderid && validation.errors.orderid ? (
+                        <FormFeedback type="invalid">{validation.errors.orderid}</FormFeedback>
                       ) : null}
                     </div>
 

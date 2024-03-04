@@ -9,10 +9,10 @@ import SidebarContent from "./SidebarContent";
 
 import { Link } from "react-router-dom";
 
-import logo from "../../assets/images/Imagem2.jpg";
-import logoLightPng from "../../assets/images/Imagem2.jpg";
-import logoLightSvg from "../../assets/images/Imagem2.jpg";
-import logoDark from "../../assets/images/Imagem2.jpg";
+import logo from "../../assets/images/Imagem2.png";
+import logoLightPng from "../../assets/images/Imagem2.png";
+import logoLightSvg from "../../assets/images/Imagem2.png";
+import logoDark from "../../assets/images/Imagem2.png";
 
 const Sidebar = props => {
 
