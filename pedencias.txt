@@ -5,10 +5,10 @@ Valor de componente precisar ser um texto - caso não seja digitada a unidade ca
 TRacar submit por Salvar-FEITO
 
 
-Em adicionar retirar a coluna Acões e selecionar clicando em cima da linha do testo
+Em adicionar retirar a coluna Acões e selecionar clicando em cima da linha do testo - não sera feito
 
 Retirar o botão configuração do Ativo -FEITO
-Ao adicionar um novo componente retornar a tela passo 1 - fiz para retornar para buscar 
+Ao adicionar um novo componente retornar a tela passo 1 - fiz para retornar para buscar - feito
 
 [Criar um campo localização além da observação]  são 3 localização
 
