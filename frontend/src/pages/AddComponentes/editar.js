@@ -30,19 +30,19 @@ const Editar = props => {
       },
       {
         Header: 'Valor',
-        accessor: 'tipoComponente.valor',
+        Cell: ({ row }) => (
+          <div className="d-flex justify-content-center">
+            {row.original?.tipoComponente.valor} {row.original?.tipoComponente.unidadeId.nome !== 'ADIMENSIONAL' ? row.original?.tipoComponente.unidadeId.nome : ''}
+          </div>
+        ),
       },
       {
-        Header: 'Unidade',
-        accessor: 'tipoComponente.unidadeId.nome',
+        Header: 'Localizacao',
+        accessor: 'localizacao',
       },
       {
         Header: 'Especificacao',
         accessor: 'tipoComponente.especificacao',
-      },
-      {
-        Header: 'local',
-        accessor: 'local',
       },
       {
         Header: 'Ações',

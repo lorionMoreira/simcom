@@ -37,7 +37,9 @@ No Menu, Na opçãp praticas, deve-se já listar todos os meus experimentos- Fei
 Na lista experimentos deve uma coluna acão que solicita os componentes, está solicitação gera um para o administrador - ver
 
 
+@@@@@@@@@@@@@
+ver a questão do ComponenteDTO e ComponenteDTO2 pq eu adicionei localizacao. ai tem que ver a parte do comprar e ver a implementação da tabela emprestimos
 
-
+implemente tambem uma tabela de log de compras
 
 

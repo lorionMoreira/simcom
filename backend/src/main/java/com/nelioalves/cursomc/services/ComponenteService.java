@@ -58,7 +58,7 @@ public class ComponenteService {
                 objDto.getFornecedorData(),
                 objDto.getValidade(),
                 tipoComponenteService.find(objDto.getTipoComponenteId()),
-                null);
+                null,objDto.getLocalizacao());
     }
     
 	public Componente update(ComponenteDTO objDto,Integer id) {

@@ -92,6 +92,9 @@ const FormWizard = () => {
   const [options2, setOptions] = useState([]);
   const [perPage, setPerPage] = useState(10);
 
+  const [threshhold, setthreshhold] = useState(0);
+  const [disDefault, setdisDefault] = useState(0);
+
   const [alertMsg, setAlertMsg] = useState('');
   const [colorAlert, setcolorAlert] = useState('success');
   const [alert, setAlert] = useState(false);
@@ -308,13 +311,15 @@ const FormWizard = () => {
       fornecedor: '',
       quantidade: '',
       validade: '',
-      observacao: ''
+      observacao: '',
+      localizacao: ''
     },
     validationSchema: Yup.object({
       fornecedor_data: Yup.string().required("Por favor, digite a especificacao do tipo de componente"),
       fornecedor: Yup.string().required("Por favor, digite o valor do tipo de componente"),
       quantidade: Yup.number().required("Por favor, digite a unidade do tipo de componente"),
       validade: Yup.string().required("Por favor, digite a especificacao do tipo de componente"),
+      localizacao: Yup.string().required("Por favor, digite a localização de 4 digitos")
       //observacao: Yup.string().required("Por favor, digite se o tipo de componente é consumível"),
     }),
     onSubmit: (values) => {
@@ -325,6 +330,7 @@ const FormWizard = () => {
         formattedValues.fornecedor = values.fornecedor;
         formattedValues.quantidade = values.quantidade;
         formattedValues.validade = formatDate2(values.validade);
+        formattedValues.localizacao = values.localizacao;
         formattedValues.observacao = values.observacao;
         formattedValues.tipoComponenteId = inputHiddenId;
         
@@ -378,6 +384,16 @@ const FormWizard = () => {
       
   }
   });
+
+  function threshholdDefault(event) {
+    const count = event.target.value.length;
+    if (count > 0) {
+      setdisDefault(true);
+    } else {
+      setdisDefault(false);
+    }
+    setthreshhold(event.target.value.length);
+  }
 
   function formatDate2(dateString) {
 
@@ -673,7 +689,7 @@ const FormWizard = () => {
 
                                 <div className="mb-3">
                                   <Row>
-                                    <Col md={10}>
+                                    <Col md={8}>
                                       <Label className="form-label">Nome do tipo de componente *</Label>
                                       <div className="input-group">
                                         <Input
@@ -714,30 +730,7 @@ const FormWizard = () => {
                                         <FormFeedback type="invalid">{validationf.errors.fornecedor_data}</FormFeedback>
                                       ) : null}
                                     </Col>
-
-                                  </Row>
-                                </div>
-                                <div className="mb-3">
-                                  <Row>
-                                    <Col md={6}>
-                                      <Label className="form-label">fornecedor*</Label>
-                                      <Input
-                                        name="fornecedor"
-                                        className="form-control"
-                                        placeholder="Digite o fornecedor do tipo de Componente"
-                                        type="text"
-                                        onChange={validationf.handleChange}
-                                        onBlur={validationf.handleBlur}
-                                        value={validationf.values.fornecedor || ""}
-                                        invalid={
-                                          validationf.touched.fornecedor && validationf.errors.fornecedor ? true : false
-                                        }
-                                      />
-                                      {validationf.touched.fornecedor && validationf.errors.fornecedor ? (
-                                        <FormFeedback type="invalid">{validationf.errors.fornecedor}</FormFeedback>
-                                      ) : null}
-                                    </Col>
-                                    <Col md={3}>
+                                    <Col md={2}>
                                       <Label className="form-label">quantidade*</Label>
                                       <Input
                                         name="quantidade"
@@ -754,6 +747,57 @@ const FormWizard = () => {
                                       {validationf.touched.quantidade && validationf.errors.quantidade ? (
                                         <FormFeedback type="invalid">{validationf.errors.quantidade}</FormFeedback>
                                       ) : null}
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-3">
+                                  <Row>
+                                    <Col md={6}>
+                                      <Label className="form-label">fornecedor*</Label>
+                                      <Input
+                                        name="fornecedor"
+                                        className="form-control"
+                                        placeholder="Digite o fornecedor do tipo de Componente"
+                                        type="text"
+                                        onChange={e => {
+                                          validationf.handleChange(e);
+                                        }}
+                                        onBlur={validationf.handleBlur}
+                                        value={validationf.values.fornecedor || ""}
+                                        invalid={
+                                          validationf.touched.fornecedor && validationf.errors.fornecedor ? true : false
+                                        }
+                                      />
+                                      {validationf.touched.fornecedor && validationf.errors.fornecedor ? (
+                                        <FormFeedback type="invalid">{validationf.errors.fornecedor}</FormFeedback>
+                                      ) : null}
+                                    </Col>
+                                    <Col md={3}>
+                                      <Label className="form-label">localizacao*</Label>
+                                      <Input
+                                        name="localizacao"
+                                        className="form-control"
+                                        placeholder="Digite o localizacao do tipo de Componente"
+                                        type="text"
+                                        maxLength="4"
+                                        onChange={e => {
+                                          validationf.handleChange(e);
+                                          threshholdDefault(e);
+                                        }}
+                                        onBlur={validationf.handleBlur}
+                                        value={validationf.values.localizacao || ""}
+                                        invalid={
+                                          validationf.touched.localizacao && validationf.errors.localizacao ? true : false
+                                        }
+                                      />
+                                      {validationf.touched.localizacao && validationf.errors.localizacao ? (
+                                        <FormFeedback type="invalid">{validationf.errors.localizacao}</FormFeedback>
+                                      ) : null}
+                                      {disDefault ? (
+                                      <span className="badgecount badge bg-success">
+                                        {threshhold} / 4{" "}
+                                      </span>
+                                    ) : null}
                                     </Col>
                                     <Col md={3}>
                                       <Label className="form-label">Validade</Label>

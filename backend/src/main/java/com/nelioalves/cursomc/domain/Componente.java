@@ -42,7 +42,7 @@ public class Componente implements Serializable {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-
+	private String localizacao;
 
 	// Constructors
 	public Componente() {
@@ -51,7 +51,8 @@ public class Componente implements Serializable {
 	public Componente(Integer id, Integer quantidade, Integer uuid, String obs, String fornecedor, Date fornecedorData,
 			Date validade,
 			TipoComponente tipoComponente,
-			User user) {
+			User user,
+			String localizacao) {
 		this.id = id;
 		this.uuid = uuid;
 		this.tipoComponente = tipoComponente;
@@ -61,12 +62,20 @@ public class Componente implements Serializable {
 		this.fornecedorData = fornecedorData;
 		this.validade = validade;
 		this.user = user;
-
+		this.localizacao = localizacao;
 	}
 	// Getters and Setters
 
 	public Integer getId() {
 		return id;
+	}
+
+	public String getLocalizacao() {
+		return localizacao;
+	}
+
+	public void setLocalizacao(String localizacao) {
+		this.localizacao = localizacao;
 	}
 
 	public void setId(Integer id) {

@@ -38,10 +38,13 @@ public class ComponenteDTO implements Serializable {
     @NotNull(message = "The age must not be null")
     private Integer tipoComponenteId;
 
+    private String localizacao;
+
     public ComponenteDTO(Integer id, @NotNull(message = "The age must not be null") Integer quantidade,
             String obs, @NotEmpty(message = "The username must not be empty") String fornecedor,
             @NotNull(message = "The validade field must not be null") Date fornecedorData, Date validade,
-            @NotNull(message = "The age must not be null") Integer tipoComponenteId) {
+            @NotNull(message = "The age must not be null") Integer tipoComponenteId,
+            String localizacao) {
         super();
         this.id = id;
         this.quantidade = quantidade;
@@ -50,11 +53,20 @@ public class ComponenteDTO implements Serializable {
         this.fornecedorData = fornecedorData;
         this.validade = validade;
         this.tipoComponenteId = tipoComponenteId;
+        this.localizacao = localizacao;
     }
 
     public ComponenteDTO() {
         super();
         // TODO Auto-generated constructor stub
+    }
+
+    public String getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(String localizacao) {
+        this.localizacao = localizacao;
     }
 
     public Integer getId() {
