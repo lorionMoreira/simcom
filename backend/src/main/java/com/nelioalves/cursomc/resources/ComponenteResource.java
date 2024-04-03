@@ -35,6 +35,7 @@ import com.nelioalves.cursomc.dto.CaixaDTO;
 import com.nelioalves.cursomc.resources.utils.ListComponenteDTOconverter;
 import com.nelioalves.cursomc.resources.utils.ReservaDTOconverter;
 import com.nelioalves.cursomc.services.ComponenteService;
+import com.nelioalves.cursomc.services.EmprestimoService;
 import com.nelioalves.cursomc.services.exceptions.AuthorizationException;
 
 @RestController
@@ -43,6 +44,9 @@ public class ComponenteResource {
 
     @Autowired
     private ComponenteService service;
+
+    @Autowired
+    private EmprestimoService emprestimoService;
 
     @Autowired
     private ReservaService reservaService;
@@ -187,6 +191,8 @@ public class ComponenteResource {
     	List<ComponenteDTO2> objDtoList = ListComponenteDTOconverter.convertToObj(productMap);
     	    	
     	List<Componente> objSavedList = service.computeInsert(objDtoList);
+
+        List<Componente> objSavedList = emprestimoService.computeInsert(objDtoList);
     	
     	return ResponseEntity.ok(objSavedList);
     	
