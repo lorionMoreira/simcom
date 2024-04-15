@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.nelioalves.cursomc.services.ReservaService;
-import com.nelioalves.cursomc.services.TipoComponenteService;
+import com.nelioalves.cursomc.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import com.nelioalves.cursomc.domain.Componente;
+import com.nelioalves.cursomc.domain.ComprasLog;
 import com.nelioalves.cursomc.domain.DisciplinaComponente;
+import com.nelioalves.cursomc.domain.Emprestimo;
 import com.nelioalves.cursomc.domain.Reserva;
 import com.nelioalves.cursomc.domain.TipoComponente;
 import com.nelioalves.cursomc.domain.User;
@@ -34,8 +35,6 @@ import com.nelioalves.cursomc.dto.TipoComponenteDTO;
 import com.nelioalves.cursomc.dto.CaixaDTO;
 import com.nelioalves.cursomc.resources.utils.ListComponenteDTOconverter;
 import com.nelioalves.cursomc.resources.utils.ReservaDTOconverter;
-import com.nelioalves.cursomc.services.ComponenteService;
-import com.nelioalves.cursomc.services.EmprestimoService;
 import com.nelioalves.cursomc.services.exceptions.AuthorizationException;
 
 @RestController
@@ -45,8 +44,10 @@ public class ComponenteResource {
     @Autowired
     private ComponenteService service;
 
+
+
     @Autowired
-    private EmprestimoService emprestimoService;
+    private ComprasLogService comprasLogService;
 
     @Autowired
     private ReservaService reservaService;
@@ -169,9 +170,14 @@ public class ComponenteResource {
 
     @PostMapping("/salvar")
     public ResponseEntity<Componente> insert(@Valid @RequestBody ComponenteDTO objDto) {
+
         ComponenteDTO objDtoComplete = service.insertUuid(objDto);
         Componente obj = service.fromDTO(objDtoComplete);
-        obj = service.insert(obj);
+        service.insert(obj);
+
+        ComprasLog objComprasLog = comprasLogService.componentToComprasLog(obj);
+        comprasLogService.insert(objComprasLog);
+
         return ResponseEntity.ok().body(obj);
     }
     
@@ -191,8 +197,6 @@ public class ComponenteResource {
     	List<ComponenteDTO2> objDtoList = ListComponenteDTOconverter.convertToObj(productMap);
     	    	
     	List<Componente> objSavedList = service.computeInsert(objDtoList);
-
-        List<Componente> objSavedList = emprestimoService.computeInsert(objDtoList);
     	
     	return ResponseEntity.ok(objSavedList);
     	

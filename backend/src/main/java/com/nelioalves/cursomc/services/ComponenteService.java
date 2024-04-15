@@ -14,7 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.nelioalves.cursomc.domain.Componente;
-
+import com.nelioalves.cursomc.domain.Emprestimo;
 import com.nelioalves.cursomc.dto.ComponenteDTO;
 import com.nelioalves.cursomc.dto.ComponenteDTO2;
 
@@ -36,6 +36,9 @@ public class ComponenteService {
     
     @Autowired
     private ClienteService clienteservice;
+
+    @Autowired
+    private EmprestimoService emprestimoService;
 
     public List<Componente> findAll() {
         return repo.findAll();
@@ -207,7 +210,10 @@ public class ComponenteService {
     				
     				Integer existente = qtdDisponivel - qtdPedida;
     				obj.setQuantidade(existente);
-    				
+
+                    Emprestimo objEmprestimo = emprestimoService.componentToEmprestimo(obj,objDto);
+    				emprestimoService.insert(objEmprestimo);
+
     				objSavedList.add(update(obj));
     				
     				if(existente == 0) {
@@ -238,6 +244,9 @@ public class ComponenteService {
     				componente2.setUser(clienteservice.find(objDto.getUserId()));
     				componente2.setUuid(obj.getUuid());
     				componente2.setValidade(obj.getValidade());
+
+                    Emprestimo objEmprestimo = emprestimoService.componentToEmprestimo(obj,objDto);
+                    emprestimoService.insert(objEmprestimo);
     				    				    				
     				objSavedList.add(repo.save(componente2));
     				
@@ -246,10 +255,10 @@ public class ComponenteService {
     				}
     				
     			}else {
-    				throw new AuthorizationException("Insufficient quantity available.");
+    				throw new AuthorizationException("Erro ao salvar componente");
     			}
     		}else {
-    			throw new AuthorizationException("Insufficient quantity available.");
+    			throw new AuthorizationException("Erro ao salvar componente");
     		}
     	}
     	

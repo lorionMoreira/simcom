@@ -31,6 +31,82 @@ public class Emprestimo implements Serializable {
     @Column(name = "data_devolvido")
     private Timestamp dataDevolvido;
 
-    private String observacoes;
     private String codigo;
+    
+    public Emprestimo() {
+    }
+
+    public Emprestimo(Integer id, User user, TipoComponente tipoComponente, Integer quantidade,
+            Timestamp dataEmprestado, Timestamp dataDevolvido,  String codigo) {
+        this.id = id;
+        this.user = user;
+        this.tipoComponente = tipoComponente;
+        this.quantidade = quantidade;
+        this.dataEmprestado = dataEmprestado;
+        this.dataDevolvido = dataDevolvido;
+        this.codigo = codigo;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public TipoComponente getTipoComponente() {
+        return tipoComponente;
+    }
+
+    public void setTipoComponente(TipoComponente tipoComponente) {
+        this.tipoComponente = tipoComponente;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public Timestamp getDataEmprestado() {
+        return dataEmprestado;
+    }
+
+    public void setDataEmprestado(Timestamp dataEmprestado) {
+        this.dataEmprestado = dataEmprestado;
+    }
+
+    public Timestamp getDataDevolvido() {
+        return dataDevolvido;
+    }
+
+    public void setDataDevolvido(Timestamp dataDevolvido) {
+        this.dataDevolvido = dataDevolvido;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    
+    
 }
