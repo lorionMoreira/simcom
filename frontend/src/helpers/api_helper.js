@@ -12,7 +12,7 @@ if(process.env.REACT_APP_DEFAULTAUTH == 'dev'){
       API_URL2 = "http://192.168.25.101:8080";
     }
 }else{
-   API_URL2 = "http://saudeon.giize.com:8080";
+   API_URL2 = "https://myec2lorion.zapto.org";
    let isInternal = isinternal();
    if(isInternal){
     API_URL2 = "http://192.168.25.101:8080";
